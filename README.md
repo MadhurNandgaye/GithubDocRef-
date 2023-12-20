@@ -371,3 +371,61 @@ The JSX section of the code contains various UI elements like input fields, drop
 ---
 
 This breakdown provides a detailed explanation of the `ListComponent` and its logic. Each section of the code serves a specific purpose, contributing to the overall functionality of the component.
+
+
+ListComponent
+|
+|-- useState
+|   |-- showCategoryA
+|   |-- asyncData
+|   |-- searchTerm
+|   |-- selectedCategory
+|   |-- sortType
+|   |-- showDeepCopied
+|
+|-- useEffect (Fetch Data)
+|   |-- fetchData
+|
+|-- useMemo (Deep Copy)
+|   |-- deepCopiedData
+|   |   |-- asyncData
+|
+|-- useMemo (Filtered Items)
+|   |-- filteredItems
+|   |   |-- asyncData
+|   |   |-- searchTerm
+|   |   |-- sortType
+|   |   |-- selectedCategory
+|
+|-- useCallback (Render List Items)
+|   |-- renderListItems
+|
+|-- useCallback (Toggle Category A Visibility)
+|   |-- toggleCategoryAVisibility
+|
+|-- JSX Rendering
+    |-- Input (Search)
+    |   |-- searchTerm
+    |
+    |-- Dropdown (Category Selection)
+    |   |-- selectedCategory
+    |
+    |-- Dropdown (Sort Type)
+    |   |-- sortType
+    |
+    |-- List Rendering (Filtered Items)
+    |   |-- filteredItems
+    |   |-- renderListItems
+    |
+    |-- Button (Toggle Deep Copied Data)
+    |   |-- showDeepCopied
+    |
+    |-- Conditional Rendering (Deep Copied Data)
+    |   |-- showDeepCopied
+    |   |-- deepCopiedData
+    |
+    |-- Conditional Rendering (Category A)
+        |-- showCategoryA
+        |-- filteredItems
+        |-- renderListItems
+
