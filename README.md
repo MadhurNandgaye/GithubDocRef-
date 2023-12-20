@@ -1,3 +1,15 @@
+Subject: Leave Request for 26th December
+
+Dear [Manager's Name],
+
+I kindly request a day off on 26th December to attend my cousin sister's wedding. I will ensure that all my tasks are managed efficiently before my absence and will coordinate with my team to handle any immediate requirements.
+
+Thank you for considering my request.
+
+Warm regards,
+
+[Your Name]
+
 # GithubDocRef-
 Certainly! Let's break down the project step-by-step, providing a roadmap to build the `ListComponent`:
 
