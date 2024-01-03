@@ -1,3 +1,83 @@
+
+Certainly! Let's enhance the `ListComponent` by incorporating the concepts of `useContext`, `useCallback`, and `useMemo`.
+
+1. **UseContext**: We'll create a context to manage the global state of our application, specifically to manage the visibility of Category A items.
+2. **UseCallback**: We'll use `useCallback` to memoize the `toggleCategoryAVisibility` function, ensuring it doesn't get recreated on every render.
+3. **UseMemo**: We'll use `useMemo` to memoize the filtered items for Category A, ensuring that it's only recalculated when the `asyncData` changes.
+
+Here's the updated `ListComponent`:
+
+```jsx
+import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
+
+// Create a Context for managing Category A visibility
+const CategoryAContext = createContext();
+
+const ListComponent = () => {
+  // State to manage the visibility of Category A items globally
+  const [showCategoryA, setShowCategoryA] = useState(false);
+
+  // State to store asynchronously fetched data
+  const [asyncData, setAsyncData] = useState([]);
+
+  // Simulate asynchronous data fetching
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(() => {
+        setAsyncData([
+          { id: 5, name: "Async Item 1", category: "A" },
+          { id: 6, name: "Async Item 2", category: "B" },
+          { id: 7, name: "Async Item 3", category: "A" },
+        ]);
+      }, 1000);
+    };
+
+    fetchData();
+  }, []);
+
+  // Memoized callback function to toggle visibility of Category A items
+  const toggleCategoryAVisibility = useCallback(() => {
+    setShowCategoryA(prevState => !prevState);
+  }, []);
+
+  // Memoized filtered items for Category A
+  const categoryAItems = useMemo(() => {
+    return asyncData.filter((item) => item.category === 'A');
+  }, [asyncData]);
+
+  // Provider to wrap the component tree and share the visibility state
+  const CategoryAProvider = ({ children }) => {
+    return (
+      <CategoryAContext.Provider value={{ showCategoryA, toggleCategoryAVisibility }}>
+        {children}
+      </CategoryAContext.Provider>
+    );
+  };
+
+  // Use the context to access visibility state and toggle function
+  const { showCategoryA: contextShowCategoryA } = useContext(CategoryAContext);
+
+  // ... (rest of the component remains unchanged)
+
+  return (
+    <CategoryAProvider>
+      {/* ... (rest of the JSX) */}
+      {contextShowCategoryA && (
+        <div>
+          <h2>Category A Items (Using Context):</h2>
+          <ul>{renderListItems(categoryAItems)}</ul>
+        </div>
+      )}
+    </CategoryAProvider>
+  );
+};
+
+export default ListComponent;
+```
+
+In this updated example, we've integrated the useContext hook to share the visibility state and toggle function across components, ensuring that the visibility of Category A items is consistent throughout the application.
+
+
 Subject: Leave Request for 26th December
 
 Dear [Manager's Name],
