@@ -1,3 +1,123 @@
+Certainly! Here's the complete `ListComponent` integrating the new features based on the code you initially provided:
+
+```jsx
+import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from 'react';
+
+// Create a Context for managing Category A visibility
+const CategoryAContext = createContext();
+
+const ListComponent = () => {
+  // State to manage the visibility of Category A items
+  const [showCategoryA, setShowCategoryA] = useState(false);
+
+  // State to store asynchronously fetched data
+  const [asyncData, setAsyncData] = useState([]);
+
+  // Simulate asynchronous data fetching
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(() => {
+        setAsyncData([
+          { id: 5, name: "Async Item 1", category: "A" },
+          { id: 6, name: "Async Item 2", category: "B" },
+          { id: 7, name: "Async Item 3", category: "A" },
+        ]);
+      }, 1000); // Simulating a 1-second delay
+    };
+
+    fetchData();
+  }, []);
+
+  // Memoized callback function to toggle visibility of Category A items
+  const toggleCategoryAVisibility = useCallback(() => {
+    setShowCategoryA(prevState => !prevState);
+  }, []);
+
+  // Memoized filtered items for Category A
+  const categoryAItems = useMemo(() => {
+    return asyncData.filter((item) => item.category === 'A');
+  }, [asyncData]);
+
+  // Function to render list items
+  const renderListItems = (itemList) => {
+    return itemList.map((item) => (
+      <li key={item.id}>{item.name}</li>
+    ));
+  };
+
+  return (
+    <div>
+      {/* Display the list of all items */}
+      <h2>List of Items:</h2>
+      <ul>{renderListItems(asyncData)}</ul>
+
+      {/* Example of filtering items based on a condition */}
+      <h2>Filter Example:</h2>
+      {/* Button to toggle visibility of Category A items */}
+      <button onClick={toggleCategoryAVisibility}>
+        Toggle Category A Visibility
+      </button>
+      
+      {/* Display Category A items based on visibility */}
+      {showCategoryA && (
+        <div>
+          <h2>Category A Items:</h2>
+          <ul>{renderListItems(categoryAItems)}</ul>
+        </div>
+      )}
+
+      {/* Display Category A items using Context */}
+      <h2>Category A Items (Using Context):</h2>
+      <CategoryAContext.Provider value={{ showCategoryA, toggleCategoryAVisibility }}>
+        <DisplayCategoryAItems />
+      </CategoryAContext.Provider>
+
+      {/* Horizontal line for separation */}
+      <hr />
+    </div>
+  );
+};
+
+// Component to display Category A items using Context
+const DisplayCategoryAItems = () => {
+  const { showCategoryA, toggleCategoryAVisibility } = useContext(CategoryAContext);
+  const categoryAItems = useMemo(() => {
+    return asyncData.filter((item) => item.category === 'A');
+  }, [asyncData]);
+
+  const renderListItems = (itemList) => {
+    return itemList.map((item) => (
+      <li key={item.id}>{item.name}</li>
+    ));
+  };
+
+  return (
+    <>
+      {showCategoryA && (
+        <div>
+          <button onClick={toggleCategoryAVisibility}>
+            Toggle Category A Visibility (Using Context)
+          </button>
+          <ul>{renderListItems(categoryAItems)}</ul>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default ListComponent;
+```
+
+In this complete code, I've integrated the new features:
+
+1. **UseContext**: Used to manage and access the visibility state and toggle function for Category A items.
+2. **UseCallback**: Memoized the `toggleCategoryAVisibility` function to prevent unnecessary re-renders.
+3. **UseMemo**: Memoized the filtered items for Category A to optimize performance.
+
+
+
+
+
 
 Certainly! Here's the complete `ListComponent` with all the features integrated:
 
