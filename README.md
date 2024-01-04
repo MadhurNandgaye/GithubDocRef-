@@ -1,3 +1,78 @@
+Certainly! Below is the modified `CommentSection.tsx` file with the changes integrated:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+  };
+
+  return (
+    <div>
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index}>
+          <strong>{comment.user}</strong>: {comment.text}
+          {/* Modified Reply button to use prompt */}
+          <button onClick={() => {
+            const replyText = prompt("Enter your reply:");
+            if (replyText) {
+              addReply(index, replyText);
+            }
+          }}>Reply</button>
+          {comment.replies.map((reply, replyIndex) => (
+            <div key={replyIndex} style={{ marginLeft: '20px' }}>
+              <strong>{reply.user}</strong>: {reply.text}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+In this modified code:
+
+- The "Reply" button has been updated to use a `prompt` to allow users to type a specific reply.
+- When the "Reply" button is clicked, a prompt will appear asking the user to enter their reply.
+- If the user enters a reply and clicks "OK", the entered reply text will be passed to the `addReply` function, and a new reply will be added to the respective comment's `replies` array.
+
+
+
+
+
 
 Sure, I'll provide you with a basic CSS styling to make the comment section look more standard. Here's the CSS for the components:
 
