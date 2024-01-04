@@ -1,3 +1,82 @@
+
+Sure, I'll provide you with a basic CSS styling to make the comment section look more standard. Here's the CSS for the components:
+
+### 1. styles.css
+
+```css
+/* styles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.input-container {
+  margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.comment {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.reply {
+  margin-left: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 8px;
+}
+```
+
+You can import this CSS file into your `App.tsx` or any other parent component that wraps your components.
+
+For example, in `App.tsx`:
+
+```tsx
+// App.tsx
+
+import React, { useState } from 'react';
+import './styles.css';  // Import the CSS file
+// ... (rest of the imports)
+
+const App: React.FC = () => {
+  // ... (rest of the code)
+};
+```
+
+This CSS provides a basic styling to the components. You can further customize the styles based on your preferences.
+
+
 Certainly! I'll provide you with the implemented code based on the structure you've shared.
 
 ### 1. types.ts
