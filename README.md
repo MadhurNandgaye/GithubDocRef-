@@ -1,3 +1,135 @@
+Sure, I'll integrate the previous explanations into the complete `CommentSection.tsx` code with annotations:
+
+```tsx
+// CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;  // Authenticated user's username.
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  // State to manage all comments.
+  const [comments, setComments] = useState<Comment[]>([]);
+
+  // State to manage new comment text.
+  const [newComment, setNewComment] = useState<string>('');
+
+  // State to manage reply texts for each comment.
+  const [replyTexts, setReplyTexts] = useState<string[]>(new Array(100).fill(''));
+
+  // Function to add a new comment.
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  // Function to add a reply to a specific comment.
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+    const newReplyTexts = [...replyTexts];
+    newReplyTexts[index] = '';
+    setReplyTexts(newReplyTexts);
+  };
+
+  // Function to edit a comment
+  const editComment = (index: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].text = newText;
+    setComments(updatedComments);
+  };
+
+  // Function to delete a comment
+  const deleteComment = (index: number) => {
+    const updatedComments = [...comments];
+    updatedComments.splice(index, 1);
+    setComments(updatedComments);
+  };
+
+  // Function to edit a reply
+  const editReply = (commentIndex: number, replyIndex: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies[replyIndex].text = newText;
+    setComments(updatedComments);
+  };
+
+  // Function to delete a reply
+  const deleteReply = (commentIndex: number, replyIndex: number) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies.splice(replyIndex, 1);
+    setComments(updatedComments);
+  };
+
+  return (
+    <div>
+      {/* Input for new comment */}
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {/* Display comments and replies */}
+      {comments.map((comment, commentIndex) => (
+        <div key={commentIndex}>
+          {/* Comment content */}
+          <p>{comment.text}</p>
+
+          {/* Edit and Delete buttons for comments */}
+          <button onClick={() => editComment(commentIndex, "Edited text")}>Edit Comment</button>
+          <button onClick={() => deleteComment(commentIndex)}>Delete Comment</button>
+
+          {/* Replies */}
+          {comment.replies.map((reply, replyIndex) => (
+            <div key={replyIndex}>
+              {/* Reply content */}
+              <p>{reply.text}</p>
+
+              {/* Edit and Delete buttons for replies */}
+              <button onClick={() => editReply(commentIndex, replyIndex, "Edited reply text")}>Edit Reply</button>
+              <button onClick={() => deleteReply(commentIndex, replyIndex)}>Delete Reply</button>
+            </div>
+          ))}
+
+          {/* Input for new reply */}
+          <textarea 
+            value={replyTexts[commentIndex]} 
+            onChange={(e) => {
+              const newReplies = [...replyTexts];
+              newReplies[commentIndex] = e.target.value;
+              setReplyTexts(newReplies);
+            }}
+            placeholder="Add a reply"
+          ></textarea>
+          <button onClick={() => addReply(commentIndex, replyTexts[commentIndex])}>Add Reply</button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+In this integrated code:
+
+- The `CommentSection` component manages comments, their replies, and associated functionalities like adding, editing, and deleting both comments and replies.
+- The comments and replies are displayed along with corresponding edit and delete buttons.
+- Textareas are provided for users to input new comments and replies.
+
+
+
+
 Certainly! I'll annotate the code in `CommentSection.tsx` with comments that explain the logic:
 
 ```tsx
