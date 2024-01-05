@@ -1,3 +1,98 @@
+I apologize for the oversight. Let's rectify this. 
+
+Below are the updated files:
+
+### 1. `CommentSection.tsx`:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+import './CommentSection.css';  // Importing the stylesheet
+
+interface CommentSectionProps {}
+
+const CommentSection: React.FC<CommentSectionProps> = () => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const addComment = (user: string, text: string) => {
+    const comment: Comment = {
+      id: Date.now(),
+      user,
+      text,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (commentId: number, user: string, replyText: string) => {
+    const updatedComments = comments.map(comment => {
+      if (comment.id === commentId) {
+        return {
+          ...comment,
+          replies: [...comment.replies, {
+            id: Date.now(),
+            user,
+            text: replyText,
+            replies: [],
+          }],
+        };
+      }
+      return comment;
+    });
+    setComments(updatedComments);
+  };
+
+  return (
+    <div className="comment-section">
+      <textarea 
+        value={newComment} 
+        onChange={(e) => setNewComment(e.target.value)} 
+        placeholder="Add a comment"
+      ></textarea>
+      <button onClick={() => addComment("User", newComment)}>Add Comment</button>
+
+      {comments.map(comment => (
+        <div key={comment.id} className="comment">
+          <strong>{comment.user}</strong>: {comment.text}
+          <div className="reply-container">
+            <textarea 
+              placeholder="Reply to this comment"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  addReply(comment.id, "User", e.currentTarget.value);
+                  e.currentTarget.value = '';
+                }
+              }}
+            ></textarea>
+            <button onClick={() => addReply(comment.id, "User", newComment)}>Reply</button>
+          </div>
+          <div className="replies">
+            {comment.replies.map(reply => (
+              <div key={reply.id} className="reply">
+                <strong>{reply.user}</strong>: {reply.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+### 2. `CommentSection.css`:
+
+The CSS remains unchanged from the previous code I provided.
+
+After updating the `CommentSection.tsx` file, ensure that you import and use it correctly in your application.
+
+
 Certainly! Here's an improved styling for the `CommentSection.tsx` component. This styling will give comments a bordered appearance and visually represent replies as threads beneath each comment.
 
 ```tsx
