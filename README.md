@@ -1,3 +1,91 @@
+Apologies for that oversight. Let's correct it. I'll add a state to track the reply text for each comment and ensure that the reply functionality is correctly implemented.
+
+Here's the revised `components/CommentSection.tsx`:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+  const [replyTexts, setReplyTexts] = useState<string[]>(new Array(100).fill('')); // Assuming a maximum of 100 comments for simplicity
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+
+    // Clear reply text after posting reply
+    const newReplyTexts = [...replyTexts];
+    newReplyTexts[index] = '';
+    setReplyTexts(newReplyTexts);
+  };
+
+  return (
+    <div className="container">
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index} className="comment">
+          <strong>{comment.user}</strong>: {comment.text}
+          <button onClick={() => {/* Implement reply toggle functionality */}}>Reply</button>
+          {/* Reply box */}
+          <div className="reply">
+            <textarea 
+              placeholder="Reply to this comment"
+              value={replyTexts[index]}
+              onChange={(e) => {
+                const newReplyTexts = [...replyTexts];
+                newReplyTexts[index] = e.target.value;
+                setReplyTexts(newReplyTexts);
+              }}
+            ></textarea>
+            <button onClick={() => addReply(index, replyTexts[index])}>Post Reply</button>
+          </div>
+          {/* Render replies here */}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+In this revised code:
+
+1. I added a `replyTexts` state to track the reply text for each comment. It's initialized with an array of empty strings.
+2. In the reply text area's `onChange` handler, I updated the respective `replyTexts` entry based on the comment's index.
+3. In the "Post Reply" button's `onClick` handler, I pass the corresponding reply text from the `replyTexts` array to the `addReply` function.
+4. After posting a reply, I clear the reply text for that comment.
+
+This should resolve the issue of missing reply text for comments.
+
+
+
+
 Certainly! Here's the full code for the project:
 
 ### 1. File Structure:
