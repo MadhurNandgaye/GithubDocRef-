@@ -1,3 +1,97 @@
+Certainly! Aesthetic design can greatly enhance the user experience. I'll provide a more styled version using CSS to make the comment section look more appealing.
+
+Here's the enhanced `styles.css`:
+
+```css
+/* styles.css */
+
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Arial', sans-serif;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.comment {
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.comment strong {
+  color: #333;
+}
+
+.comment button {
+  margin-left: 10px;
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.reply {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.replies {
+  margin-top: 15px;
+  padding-left: 20px;
+}
+
+.reply strong {
+  color: #555;
+}
+```
+
+With this CSS, I've:
+
+- Improved the overall container styling.
+- Given a better design to the text areas and buttons.
+- Enhanced the comment and reply styling for better readability.
+- Added hover effects to buttons for better interactivity.
+
+Ensure that this CSS is imported into your `App.tsx` as before:
+
+```tsx
+import './styles.css';
+```
+
+With these styles, the comment section should now look more polished and aesthetic. Adjustments can be made further based on specific preferences or branding requirements.
+
+
+
+
 I understand. We need to render the replies below each comment once they are posted. Let's add the functionality to display replies for each comment.
 
 Here's the updated `components/CommentSection.tsx`:
