@@ -1,3 +1,96 @@
+I understand. We need to render the replies below each comment once they are posted. Let's add the functionality to display replies for each comment.
+
+Here's the updated `components/CommentSection.tsx`:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+  const [replyTexts, setReplyTexts] = useState<string[]>(new Array(100).fill('')); // Assuming a maximum of 100 comments for simplicity
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+
+    // Clear reply text after posting reply
+    const newReplyTexts = [...replyTexts];
+    newReplyTexts[index] = '';
+    setReplyTexts(newReplyTexts);
+  };
+
+  return (
+    <div className="container">
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index} className="comment">
+          <strong>{comment.user}</strong>: {comment.text}
+          <button onClick={() => {/* Implement reply toggle functionality */}}>Reply</button>
+          {/* Reply box */}
+          <div className="reply">
+            <textarea 
+              placeholder="Reply to this comment"
+              value={replyTexts[index]}
+              onChange={(e) => {
+                const newReplyTexts = [...replyTexts];
+                newReplyTexts[index] = e.target.value;
+                setReplyTexts(newReplyTexts);
+              }}
+            ></textarea>
+            <button onClick={() => addReply(index, replyTexts[index])}>Post Reply</button>
+          </div>
+          {/* Render replies here */}
+          <div className="replies">
+            {comment.replies.map((reply, replyIndex) => (
+              <div key={replyIndex} className="reply">
+                <strong>{reply.user}</strong>: {reply.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+In this updated code:
+
+1. After each comment, there's a new `<div>` with a class of `replies` that will contain all the replies for that comment.
+2. Inside this `replies` div, we map through `comment.replies` to render each reply below its respective comment.
+
+Now, when you add a reply and click "Post Reply", the reply should appear below the respective comment.
+
+
+
+
 Apologies for that oversight. Let's correct it. I'll add a state to track the reply text for each comment and ensure that the reply functionality is correctly implemented.
 
 Here's the revised `components/CommentSection.tsx`:
