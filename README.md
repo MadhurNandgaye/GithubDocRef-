@@ -1,3 +1,74 @@
+Alright, let's remove the timing feature. Here's the simplified `CommentSection.tsx` file without the timestamp:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+  };
+
+  return (
+    <div>
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index}>
+          <strong>{comment.user}</strong>: {comment.text}
+          <button onClick={() => {
+            const replyText = prompt("Enter your reply:");
+            if (replyText) {
+              addReply(index, replyText);
+            }
+          }}>Reply</button>
+          <div style={{ marginLeft: '20px' }}>
+            {comment.replies.map((reply, replyIndex) => (
+              <div key={replyIndex}>
+                <strong>{reply.user}</strong>: {reply.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+With this version, the comments and replies are displayed without any timestamps.
+
+
+
+
 Got it! To implement the nested replies and display the time of each comment/reply, I'll make some modifications to the `CommentSection.tsx` file.
 
 Here's an updated version:
