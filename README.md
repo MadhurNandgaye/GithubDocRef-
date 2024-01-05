@@ -1,3 +1,84 @@
+Certainly! I'll annotate the code in `CommentSection.tsx` with comments that explain the logic:
+
+```tsx
+// CommentSection.tsx
+
+// ... (other imports and code)
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  // ... (existing state and methods)
+
+  // Function to edit a comment
+  const editComment = (index: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].text = newText;  // Update the text of the specified comment index.
+    setComments(updatedComments);  // Update the state with the edited comment.
+  };
+
+  // Function to delete a comment
+  const deleteComment = (index: number) => {
+    const updatedComments = [...comments];
+    updatedComments.splice(index, 1);  // Remove the comment at the specified index.
+    setComments(updatedComments);  // Update the state without the deleted comment.
+  };
+
+  // Function to edit a reply
+  const editReply = (commentIndex: number, replyIndex: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies[replyIndex].text = newText;  // Update the text of the specified reply within a comment.
+    setComments(updatedComments);  // Update the state with the edited reply.
+  };
+
+  // Function to delete a reply
+  const deleteReply = (commentIndex: number, replyIndex: number) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies.splice(replyIndex, 1);  // Remove the reply at the specified index within a comment.
+    setComments(updatedComments);  // Update the state without the deleted reply.
+  };
+
+  return (
+    <div>
+      {/* Logic to render comments and reply components */}
+      {/* ... */}
+
+      {comments.map((comment, commentIndex) => (
+        <div key={commentIndex}>
+          {/* Comment content */}
+          <p>{comment.text}</p>
+
+          {/* Edit and Delete buttons for comments */}
+          <button onClick={() => editComment(commentIndex, "Edited text")}>Edit Comment</button>
+          <button onClick={() => deleteComment(commentIndex)}>Delete Comment</button>
+
+          {/* Replies */}
+          {comment.replies.map((reply, replyIndex) => (
+            <div key={replyIndex}>
+              {/* Reply content */}
+              <p>{reply.text}</p>
+
+              {/* Edit and Delete buttons for replies */}
+              <button onClick={() => editReply(commentIndex, replyIndex, "Edited reply text")}>Edit Reply</button>
+              <button onClick={() => deleteReply(commentIndex, replyIndex)}>Delete Reply</button>
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+In the code:
+
+- `editComment` and `deleteComment` operate on the `comments` array directly.
+- `editReply` and `deleteReply` target replies within a comment, making use of the nested structure of comments and replies.
+- The button actions are linked to these functions, enabling users to edit or delete comments and replies.
+
+
+
+
 Absolutely. Let's dive into the code and logic, step by step.
 
 ### 1. **types.ts**:
