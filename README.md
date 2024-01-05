@@ -1,3 +1,200 @@
+Certainly! Here's the full code for the project:
+
+### 1. File Structure:
+
+```
+src/
+|-- components/
+|   |-- CommentSection.tsx
+|   |-- LoginForm.tsx
+|-- App.tsx
+|-- index.tsx
+|-- types.ts
+|-- styles.css
+```
+
+### 2. types.ts
+
+```typescript
+// types.ts
+
+export interface Comment {
+  user: string;
+  text: string;
+  replies: Comment[];
+}
+
+export interface User {
+  username: string;
+  password: string;
+}
+```
+
+### 3. styles.css
+
+```css
+/* styles.css */
+
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.comment {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.reply {
+  margin-left: 20px;
+  border-left: 2px solid #ccc;
+  padding-left: 10px;
+}
+```
+
+### 4. components/LoginForm.tsx
+
+```tsx
+// components/LoginForm.tsx
+
+import React, { useState } from 'react';
+import { User } from '../types';
+
+interface LoginFormProps {
+  onLogin: (user: User) => void;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
+  const handleLogin = () => {
+    const user: User = { username, password };
+    onLogin(user);
+  };
+
+  return (
+    <div>
+      <input type="text" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+};
+
+export default LoginForm;
+```
+
+### 5. components/CommentSection.tsx
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+  };
+
+  return (
+    <div className="container">
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index} className="comment">
+          <strong>{comment.user}</strong>: {comment.text}
+          <button onClick={() => /* Implement reply functionality */}>Reply</button>
+          {/* Reply box */}
+          <div className="reply">
+            <textarea placeholder="Reply to this comment"></textarea>
+            <button onClick={() => addReply(index, /* replyText */)}>Post Reply</button>
+          </div>
+          {/* Render replies here */}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+### 6. App.tsx
+
+```tsx
+// App.tsx
+
+import React, { useState } from 'react';
+import LoginForm from './components/LoginForm';
+import CommentSection from './components/CommentSection';
+import { User } from './types';
+import './styles.css';
+
+const App: React.FC = () => {
+  const [user, setUser] = useState<string | null>(null);
+
+  const handleLogin = (loggedInUser: User) => {
+    // Here, you can add actual authentication logic.
+    // For simplicity, we are just setting the user.
+    setUser(loggedInUser.username);
+  };
+
+  return (
+    <div>
+      {!user ? (
+        <LoginForm onLogin={handleLogin} />
+      ) : (
+        <CommentSection user={user} />
+      )}
+    </div>
+  );
+};
+
+export default App;
+```
+
+This code provides a structured approach to the comment section, user authentication, and reply functionality with basic styling.
+
+
+
+
+
+
 Sure, let's break down the project into different files to organize the code better. Here's a more structured approach:
 
 ### 1. File Structure:
