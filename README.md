@@ -1,3 +1,106 @@
+Got it! To implement the nested replies and display the time of each comment/reply, I'll make some modifications to the `CommentSection.tsx` file.
+
+Here's an updated version:
+
+```tsx
+// components/CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+
+interface CommentSectionProps {
+  user: string;
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+      timestamp: new Date().toISOString(),
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+      timestamp: new Date().toISOString(),
+    });
+    setComments(updatedComments);
+  };
+
+  return (
+    <div>
+      <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+      <button onClick={addComment}>Add Comment</button>
+
+      {comments.map((comment, index) => (
+        <div key={index}>
+          <strong>{comment.user}</strong> ({new Date(comment.timestamp).toLocaleString()}): {comment.text}
+          <button onClick={() => {
+            const replyText = prompt("Enter your reply:");
+            if (replyText) {
+              addReply(index, replyText);
+            }
+          }}>Reply</button>
+          <div style={{ marginLeft: '20px' }}>
+            {comment.replies.map((reply, replyIndex) => (
+              <div key={replyIndex}>
+                <strong>{reply.user}</strong> ({new Date(reply.timestamp).toLocaleString()}): {reply.text}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+Changes made:
+
+1. Added a `timestamp` property to both comments and replies to store the creation time.
+2. Modified the display to show the user, timestamp, and text for both comments and replies.
+3. Displayed nested replies below each comment with appropriate indentation.
+
+Ensure you also have the `Comment` type defined in the `types` directory with the `timestamp` property:
+
+```typescript
+// types/index.ts
+
+export interface Comment {
+  user: string;
+  text: string;
+  replies: Reply[];
+  timestamp: string;
+}
+
+export interface Reply {
+  user: string;
+  text: string;
+  replies: Reply[];
+  timestamp: string;
+}
+```
+
+With these modifications, your comments and replies will be displayed with timestamps, and you'll be able to reply in a nested manner.
+
+
+
+
+
+
 I apologize for the oversight. Let's rectify this. 
 
 Below are the updated files:
