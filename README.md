@@ -1,3 +1,144 @@
+Certainly! Here's the complete `CommentSection.tsx` code integrated with the CSS styles:
+
+**styles.css**
+```css
+/* styles.css */
+
+.comment-container {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.comment-content {
+  margin-bottom: 10px;
+}
+
+.reply-container {
+  margin-left: 20px;
+  border: 1px solid #eaeaea;
+  padding: 10px;
+}
+
+.textarea-input {
+  margin-bottom: 10px;
+}
+```
+
+**CommentSection.tsx**
+```tsx
+// CommentSection.tsx
+
+import React, { useState } from 'react';
+import { Comment } from '../types';
+import './styles.css'; // Import the styles
+
+interface CommentSectionProps {
+  user: string;  // Authenticated user's username.
+}
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState<string>('');
+  const [replyTexts, setReplyTexts] = useState<string[]>(new Array(100).fill(''));
+
+  const addComment = () => {
+    const comment: Comment = {
+      user,
+      text: newComment,
+      replies: [],
+    };
+    setComments([...comments, comment]);
+    setNewComment('');
+  };
+
+  const addReply = (index: number, replyText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].replies.push({
+      user,
+      text: replyText,
+      replies: [],
+    });
+    setComments(updatedComments);
+    const newReplyTexts = [...replyTexts];
+    newReplyTexts[index] = '';
+    setReplyTexts(newReplyTexts);
+  };
+
+  const editComment = (index: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[index].text = newText;
+    setComments(updatedComments);
+  };
+
+  const deleteComment = (index: number) => {
+    const updatedComments = [...comments];
+    updatedComments.splice(index, 1);
+    setComments(updatedComments);
+  };
+
+  const editReply = (commentIndex: number, replyIndex: number, newText: string) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies[replyIndex].text = newText;
+    setComments(updatedComments);
+  };
+
+  const deleteReply = (commentIndex: number, replyIndex: number) => {
+    const updatedComments = [...comments];
+    updatedComments[commentIndex].replies.splice(replyIndex, 1);
+    setComments(updatedComments);
+  };
+
+  return (
+    <div>
+      <div className="textarea-input">
+        <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+        <button onClick={addComment}>Add Comment</button>
+      </div>
+
+      {comments.map((comment, commentIndex) => (
+        <div className="comment-container" key={commentIndex}>
+          <div className="comment-content">
+            <p>{comment.text}</p>
+            <button onClick={() => editComment(commentIndex, "Edited text")}>Edit Comment</button>
+            <button onClick={() => deleteComment(commentIndex)}>Delete Comment</button>
+          </div>
+
+          {comment.replies.map((reply, replyIndex) => (
+            <div className="reply-container" key={replyIndex}>
+              <p>{reply.text}</p>
+              <button onClick={() => editReply(commentIndex, replyIndex, "Edited reply text")}>Edit Reply</button>
+              <button onClick={() => deleteReply(commentIndex, replyIndex)}>Delete Reply</button>
+            </div>
+          ))}
+
+          <div className="textarea-input">
+            <textarea 
+              value={replyTexts[commentIndex]} 
+              onChange={(e) => {
+                const newReplies = [...replyTexts];
+                newReplies[commentIndex] = e.target.value;
+                setReplyTexts(newReplies);
+              }}
+              placeholder="Add a reply"
+            ></textarea>
+            <button onClick={() => addReply(commentIndex, replyTexts[commentIndex])}>Add Reply</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+With this code, the `CommentSection` component will display comments as main threads, and their replies will be nested below each comment, giving it a threaded comment appearance.
+
+
+
+
+
 To style the `CommentSection` component to look like a threaded comment section with replies nested below comments, you can use CSS. Here's a simple example to get you started:
 
 ```css
