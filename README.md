@@ -1,3 +1,99 @@
+To style the `CommentSection` component to look like a threaded comment section with replies nested below comments, you can use CSS. Here's a simple example to get you started:
+
+```css
+/* styles.css */
+
+.comment-container {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.comment-content {
+  margin-bottom: 10px;
+}
+
+.reply-container {
+  margin-left: 20px;
+  border: 1px solid #eaeaea;
+  padding: 10px;
+}
+
+.textarea-input {
+  margin-bottom: 10px;
+}
+```
+
+Now, apply these styles to the `CommentSection` component:
+
+```tsx
+// CommentSection.tsx
+
+// ... (other imports)
+
+import './styles.css'; // Import the styles
+
+const CommentSection: React.FC<CommentSectionProps> = ({ user }) => {
+  // ... (existing code)
+
+  return (
+    <div>
+      {/* Input for new comment */}
+      <div className="textarea-input">
+        <textarea value={newComment} onChange={(e) => setNewComment(e.target.value)} placeholder="Add a comment"></textarea>
+        <button onClick={addComment}>Add Comment</button>
+      </div>
+
+      {/* Display comments and replies */}
+      {comments.map((comment, commentIndex) => (
+        <div className="comment-container" key={commentIndex}>
+          {/* Comment content */}
+          <div className="comment-content">
+            <p>{comment.text}</p>
+            {/* Edit and Delete buttons for comments */}
+            <button onClick={() => editComment(commentIndex, "Edited text")}>Edit Comment</button>
+            <button onClick={() => deleteComment(commentIndex)}>Delete Comment</button>
+          </div>
+
+          {/* Replies */}
+          {comment.replies.map((reply, replyIndex) => (
+            <div className="reply-container" key={replyIndex}>
+              {/* Reply content */}
+              <p>{reply.text}</p>
+              {/* Edit and Delete buttons for replies */}
+              <button onClick={() => editReply(commentIndex, replyIndex, "Edited reply text")}>Edit Reply</button>
+              <button onClick={() => deleteReply(commentIndex, replyIndex)}>Delete Reply</button>
+            </div>
+          ))}
+
+          {/* Input for new reply */}
+          <div className="textarea-input">
+            <textarea 
+              value={replyTexts[commentIndex]} 
+              onChange={(e) => {
+                const newReplies = [...replyTexts];
+                newReplies[commentIndex] = e.target.value;
+                setReplyTexts(newReplies);
+              }}
+              placeholder="Add a reply"
+            ></textarea>
+            <button onClick={() => addReply(commentIndex, replyTexts[commentIndex])}>Add Reply</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default CommentSection;
+```
+
+With these styles and layout, comments will appear as main threads, and their replies will be nested below each comment, giving a threaded comment appearance. Adjust the styles as needed to fit your design requirements.
+
+
+
+
+
 Sure, I'll integrate the previous explanations into the complete `CommentSection.tsx` code with annotations:
 
 ```tsx
