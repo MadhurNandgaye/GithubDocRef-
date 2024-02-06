@@ -1,3 +1,80 @@
+Certainly! If you want to move the "Update" button to the top of the table, you can modify the rendering order in the `return` statement. Here's the updated `TableComponent` with the "Update" button at the top:
+
+```tsx
+// src/TableComponent.tsx
+import React, { useState } from 'react';
+import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+
+interface Row {
+  accessLevel: string;
+  edit: boolean;
+  readOnly: boolean;
+  disabled: boolean;
+}
+
+const TableComponent: React.FC = () => {
+  const [rows, setRows] = useState<Row[]>([
+    { accessLevel: 'Row 1', edit: false, readOnly: false, disabled: false },
+    { accessLevel: 'Row 2', edit: false, readOnly: false, disabled: false },
+    // Add more rows as needed
+  ]);
+
+  const handleCheckboxChange = (index: number, column: keyof Row) => {
+    setRows((prevRows) => {
+      const newRows = [...prevRows];
+      newRows[index][column] = !newRows[index][column];
+      return newRows;
+    });
+  };
+
+  const handleUpdate = () => {
+    // Add your logic to handle the update (e.g., send data to a server)
+    console.log('Updating Rows:', rows);
+  };
+
+  return (
+    <>
+      <Button variant="contained" color="primary" onClick={handleUpdate} style={{ marginBottom: '10px' }}>
+        Update
+      </Button>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Access Levels</TableCell>
+              <TableCell>Edit</TableCell>
+              <TableCell>Read Only</TableCell>
+              <TableCell>Disabled</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell>{row.accessLevel}</TableCell>
+                <TableCell>
+                  <Checkbox checked={row.edit} onChange={() => handleCheckboxChange(index, 'edit')} />
+                </TableCell>
+                <TableCell>
+                  <Checkbox checked={row.readOnly} onChange={() => handleCheckboxChange(index, 'readOnly')} />
+                </TableCell>
+                <TableCell>
+                  <Checkbox checked={row.disabled} onChange={() => handleCheckboxChange(index, 'disabled')} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
+  );
+};
+
+export default TableComponent;
+```
+
+Now, the "Update" button is positioned at the top of the table. Feel free to adjust the styling or structure based on your preferences.
+
+
 Certainly! I've added an "Update" button to save the changes in the example below:
 
 ```tsx
