@@ -1,3 +1,110 @@
+Certainly! Here's the entire code for a simple React project with TypeScript, Material-UI, and a single component (`AccessControlComponent`) in a single file (`App.tsx`):
+
+```tsx
+// App.tsx
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import {
+  Checkbox,
+  Button,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Paper,
+  Typography,
+  CssBaseline,
+  createTheme,
+  ThemeProvider,
+} from '@mui/material';
+
+const theme = createTheme();
+
+const AccessControlComponent: React.FC = () => {
+  const [accessLevels, setAccessLevels] = useState({
+    edit: false,
+    readOnly: false,
+    disabled: false,
+  });
+
+  const handleCheckboxChange = (level: keyof typeof accessLevels) => {
+    setAccessLevels((prevLevels) => ({
+      ...Object.fromEntries(Object.keys(prevLevels).map((key) => [key, key === level])),
+    }));
+  };
+
+  const handleUpdate = () => {
+    // Add your logic to handle the update
+    console.log('Updating Access Levels:', accessLevels);
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <Grid item xs={10} md={6} lg={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h5" gutterBottom>
+              Access Levels
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={accessLevels.edit}
+                    onChange={() => handleCheckboxChange('edit')}
+                  />
+                }
+                label="Edit"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={accessLevels.readOnly}
+                    onChange={() => handleCheckboxChange('readOnly')}
+                  />
+                }
+                label="Read Only"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={accessLevels.disabled}
+                    onChange={() => handleCheckboxChange('disabled')}
+                  />
+                }
+                label="Disabled"
+              />
+            </FormGroup>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUpdate}
+              style={{ marginTop: '10px' }}
+            >
+              Update
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+  );
+};
+
+ReactDOM.render(
+  <AccessControlComponent />,
+  document.getElementById('root')
+);
+```
+
+This single file (`App.tsx`) contains both the main `AccessControlComponent` and the rendering logic using `ReactDOM`. Ensure that you have the necessary dependencies installed:
+
+```bash
+npm install react react-dom @mui/material @emotion/react @emotion/styled
+```
+
+You can copy and paste this code into your project's `src` folder.
+
+
 Certainly! Below is the entire file structure along with the contents for a simple React project with TypeScript and Material-UI. You can create a new project folder and organize it like this:
 
 ```plaintext
