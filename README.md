@@ -1,8 +1,9 @@
-Certainly! Here's a simple example of a React-Typescript project with the `AccessControlComponent` all in a single file:
+Certainly! Here's the entire code for the `App.tsx` file, including the `AccessControlComponent`:
 
 ```tsx
 // App.tsx
 import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import {
   Checkbox,
   Button,
@@ -11,6 +12,9 @@ import {
   Grid,
   Paper,
   Typography,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
 } from '@mui/material';
 
 interface AccessLevels {
@@ -18,6 +22,8 @@ interface AccessLevels {
   readOnly: boolean;
   disabled: boolean;
 }
+
+const theme = createTheme();
 
 const AccessControlComponent: React.FC = () => {
   const [accessLevels, setAccessLevels] = useState<AccessLevels>({
@@ -28,8 +34,9 @@ const AccessControlComponent: React.FC = () => {
 
   const handleCheckboxChange = (level: keyof AccessLevels) => {
     setAccessLevels((prevLevels) => ({
-      ...prevLevels,
-      [level]: !prevLevels[level],
+      edit: level === 'edit' ? !prevLevels.edit : false,
+      readOnly: level === 'readOnly' ? !prevLevels.readOnly : false,
+      disabled: level === 'disabled' ? !prevLevels.disabled : false,
     }));
   };
 
@@ -47,39 +54,19 @@ const AccessControlComponent: React.FC = () => {
           </Typography>
           <FormGroup>
             <FormControlLabel
-              control={
-                <Checkbox
-                  checked={accessLevels.edit}
-                  onChange={() => handleCheckboxChange('edit')}
-                />
-              }
+              control={<Checkbox checked={accessLevels.edit} onChange={() => handleCheckboxChange('edit')} />}
               label="Edit"
             />
             <FormControlLabel
-              control={
-                <Checkbox
-                  checked={accessLevels.readOnly}
-                  onChange={() => handleCheckboxChange('readOnly')}
-                />
-              }
+              control={<Checkbox checked={accessLevels.readOnly} onChange={() => handleCheckboxChange('readOnly')} />}
               label="Read Only"
             />
             <FormControlLabel
-              control={
-                <Checkbox
-                  checked={accessLevels.disabled}
-                  onChange={() => handleCheckboxChange('disabled')}
-                />
-              }
+              control={<Checkbox checked={accessLevels.disabled} onChange={() => handleCheckboxChange('disabled')} />}
               label="Disabled"
             />
           </FormGroup>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdate}
-            style={{ marginTop: '10px' }}
-          >
+          <Button variant="contained" color="primary" onClick={handleUpdate} style={{ marginTop: '10px' }}>
             Update
           </Button>
         </Paper>
@@ -88,16 +75,27 @@ const AccessControlComponent: React.FC = () => {
   );
 };
 
-// index.tsx
-import React from 'react';
-import ReactDOM from 'react-dom';
+const App: React.FC = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AccessControlComponent />
+    </ThemeProvider>
+  );
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <AccessControlComponent />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
 ```
 
-This single file includes the `AccessControlComponent` and the `ReactDOM.render` part to render it. Keep in mind that as your project grows, it's recommended to organize your code into separate files and folders for better maintainability.
+You can copy and paste this entire code into your `App.tsx` file. Make sure to install the required dependencies if you haven't already:
+
+```bash
+npm install react react-dom @mui/material @emotion/react @emotion/styled
+```
+
+This code includes both the main `App` component and the `AccessControlComponent` in a single file.
