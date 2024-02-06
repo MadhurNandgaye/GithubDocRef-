@@ -1,3 +1,32 @@
+Certainly! Here is the `index.tsx` file that you can use in your React project:
+
+```tsx
+// index.tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './app';
+import './index.css'; // If you have a separate CSS file, otherwise, you can remove this line
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Make sure to save this file in the same directory as your `app.tsx` file. If you have a separate CSS file, you can include it by adjusting the import statement accordingly.
+
+After creating the `index.tsx` file, run your application with:
+
+```bash
+npm start
+```
+
+This should start your React app with the `App` component as the entry point. If you encounter any issues or have further questions, feel free to ask!
+
+
+
 Certainly! Here is the entire code for a simple React project with TypeScript and Material-UI in a single file (`app.tsx`):
 
 ```tsx
