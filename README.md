@@ -1,3 +1,108 @@
+Certainly! Let's simplify the `app.tsx` file and provide a minimal example. Copy and paste the following code into your `src/app.tsx` file:
+
+```tsx
+// src/app.tsx
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import {
+  Checkbox,
+  Button,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Paper,
+  Typography,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
+} from '@mui/material';
+
+interface AccessLevels {
+  edit: boolean;
+  readOnly: boolean;
+  disabled: boolean;
+}
+
+const theme = createTheme();
+
+const App: React.FC = () => {
+  const [accessLevels, setAccessLevels] = useState<AccessLevels>({
+    edit: false,
+    readOnly: false,
+    disabled: false,
+  });
+
+  const handleCheckboxChange = (level: keyof AccessLevels) => {
+    setAccessLevels((prevLevels) => ({
+      edit: level === 'edit' ? !prevLevels.edit : false,
+      readOnly: level === 'readOnly' ? !prevLevels.readOnly : false,
+      disabled: level === 'disabled' ? !prevLevels.disabled : false,
+    }));
+  };
+
+  const handleUpdate = () => {
+    // Add your logic to handle the update
+    console.log('Updating Access Levels:', accessLevels);
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+        <Grid item xs={10} md={6} lg={4}>
+          <Paper elevation={3} style={{ padding: '20px' }}>
+            <Typography variant="h5" gutterBottom>
+              Access Levels
+            </Typography>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox checked={accessLevels.edit} onChange={() => handleCheckboxChange('edit')} />}
+                label="Edit"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={accessLevels.readOnly} onChange={() => handleCheckboxChange('readOnly')} />}
+                label="Read Only"
+              />
+              <FormControlLabel
+                control={<Checkbox checked={accessLevels.disabled} onChange={() => handleCheckboxChange('disabled')} />}
+                label="Disabled"
+              />
+            </FormGroup>
+            <Button variant="contained" color="primary" onClick={handleUpdate} style={{ marginTop: '10px' }}>
+              Update
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
+  );
+};
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Make sure that you have the required dependencies installed by running:
+
+```bash
+npm install @mui/material @emotion/react @emotion/styled react react-dom
+```
+
+After pasting this code, you can run your application using:
+
+```bash
+npm start
+```
+
+This should set up a basic React app with TypeScript and Material-UI, displaying the `AccessControlComponent`.
+
+
+
+
 Certainly! Here's the entire code for the `App.tsx` file, including the `AccessControlComponent`:
 
 ```tsx
