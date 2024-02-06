@@ -1,220 +1,207 @@
-Certainly! Let's create a more comprehensive React project that includes a flexbox layout with multiple items, content in the collapsed box, and a more interactive popup.
 
-### Step 1: Setup
+Certainly! Below is a simplified example of the file structure for a React-Typescript project with the provided `AccessControlComponent`. Please note that this is a basic setup, and you might need additional configurations depending on your project requirements.
 
-Initialize a new React project:
-
-```bash
-npx create-react-app flexbox-popup-project
-cd flexbox-popup-project
+```plaintext
+my-react-typescript-app/
+|-- src/
+|   |-- components/
+|   |   |-- AccessControlComponent/
+|   |       |-- AccessControlComponent.tsx
+|   |-- App.tsx
+|   |-- index.tsx
+|-- package.json
+|-- tsconfig.json
+|-- node_modules/
 ```
 
-### Step 2: Project Structure
+Now, let's create the actual files:
 
-The project structure will include the `App.js` file and a `styles.css` file.
+1. **package.json:**
+   ```json
+   {
+     "name": "my-react-typescript-app",
+     "version": "1.0.0",
+     "main": "index.js",
+     "license": "MIT",
+     "scripts": {
+       "start": "react-scripts start",
+       "build": "react-scripts build",
+       "test": "react-scripts test",
+       "eject": "react-scripts eject"
+     },
+     "dependencies": {
+       "@emotion/react": "^11.7.1",
+       "@emotion/styled": "^11.7.0",
+       "@mui/material": "^5.2.3",
+       "react": "^17.0.2",
+       "react-dom": "^17.0.2",
+       "react-scripts": "4.0.3",
+       "typescript": "^4.3.5"
+     },
+     "eslintConfig": {
+       "extends": [
+         "react-app",
+         "react-app/jest"
+       ]
+     },
+     "browserslist": {
+       "production": [
+         ">0.2%",
+         "not dead",
+         "not op_mini all"
+       ],
+       "development": [
+         "last 1 chrome version",
+         "last 1 firefox version",
+         "last 1 safari version"
+       ]
+     }
+   }
+   ```
 
-### Step 3: Implement Flexbox Layout
+2. **tsconfig.json:**
+   ```json
+   {
+     "compilerOptions": {
+       "target": "es5",
+       "lib": ["dom", "dom.iterable", "esnext"],
+       "allowJs": true,
+       "skipLibCheck": true,
+       "esModuleInterop": true,
+       "strict": true,
+       "forceConsistentCasingInFileNames": true,
+       "module": "esnext",
+       "moduleResolution": "node",
+       "resolveJsonModule": true,
+       "isolatedModules": true,
+       "noEmit": true,
+       "jsx": "react-jsx",
+       "types": ["node", "react", "@types/react-dom", "@mui/material"]
+     },
+     "include": ["src"]
+   }
+   ```
 
-In `App.js`, create a flexbox layout with multiple boxes:
+3. **src/App.tsx:**
+   ```tsx
+   import React from 'react';
+   import AccessControlComponent from './components/AccessControlComponent/AccessControlComponent';
 
-```jsx
-import React, { useState } from 'react';
-import './styles.css';
+   const App: React.FC = () => {
+     return (
+       <div className="App">
+         <AccessControlComponent />
+       </div>
+     );
+   };
 
-function App() {
-  const [collapsed, setCollapsed] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
+   export default App;
+   ```
 
-  const handleCollapse = () => {
-    setCollapsed(!collapsed);
-  };
+4. **src/components/AccessControlComponent/AccessControlComponent.tsx:**
+   ```tsx
+   import React, { useState } from 'react';
+   import {
+     Checkbox,
+     Button,
+     FormControlLabel,
+     FormGroup,
+     Grid,
+     Paper,
+     Typography,
+   } from '@mui/material';
 
-  const handlePopup = () => {
-    setShowPopup(!showPopup);
-  };
+   interface AccessLevels {
+     edit: boolean;
+     readOnly: boolean;
+     disabled: boolean;
+   }
 
-  return (
-    <div className="container">
-      <div className={`box ${collapsed ? 'collapsed' : ''}`} onClick={handleCollapse}>
-        <h2>Title</h2>
-        {collapsed && <p>Content inside the collapsed box.</p>}
-      </div>
-      <div className="box">
-        <h2>Title</h2>
-        <p>Content</p>
-      </div>
-      <div className="box" onClick={handlePopup}>
-        <h2>Title</h2>
-        <p>Click for Popup</p>
-      </div>
-      {showPopup && (
-        <div className="popup" onClick={handlePopup}>
-          Popup Content
-        </div>
-      )}
-    </div>
-  );
-}
+   const AccessControlComponent: React.FC = () => {
+     const [accessLevels, setAccessLevels] = useState<AccessLevels>({
+       edit: false,
+       readOnly: false,
+       disabled: false,
+     });
 
-export default App;
-```
+     const handleCheckboxChange = (level: keyof AccessLevels) => {
+       setAccessLevels((prevLevels) => ({
+         ...prevLevels,
+         [level]: !prevLevels[level],
+       }));
+     };
 
-### Step 4: Style the Components
+     const handleUpdate = () => {
+       // Add your logic to handle the update
+       console.log('Updating Access Levels:', accessLevels);
+     };
 
-In `styles.css`, define styles for the flex container, boxes, and popup:
+     return (
+       <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
+         <Grid item xs={10} md={6} lg={4}>
+           <Paper elevation={3} style={{ padding: '20px' }}>
+             <Typography variant="h5" gutterBottom>
+               Access Levels
+             </Typography>
+             <FormGroup>
+               <FormControlLabel
+                 control={
+                   <Checkbox
+                     checked={accessLevels.edit}
+                     onChange={() => handleCheckboxChange('edit')}
+                   />
+                 }
+                 label="Edit"
+               />
+               <FormControlLabel
+                 control={
+                   <Checkbox
+                     checked={accessLevels.readOnly}
+                     onChange={() => handleCheckboxChange('readOnly')}
+                   />
+                 }
+                 label="Read Only"
+               />
+               <FormControlLabel
+                 control={
+                   <Checkbox
+                     checked={accessLevels.disabled}
+                     onChange={() => handleCheckboxChange('disabled')}
+                   />
+                 }
+                 label="Disabled"
+               />
+             </FormGroup>
+             <Button
+               variant="contained"
+               color="primary"
+               onClick={handleUpdate}
+               style={{ marginTop: '10px' }}
+             >
+               Update
+             </Button>
+           </Paper>
+         </Grid>
+       </Grid>
+     );
+   };
 
-```css
-.container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  height: 100vh;
-  padding: 20px;
-}
+   export default AccessControlComponent;
+   ```
 
-.box {
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  padding: 20px;
-  background-color: #3498db;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+5. **src/index.tsx:**
+   ```tsx
+   import React from 'react';
+   import ReactDOM from 'react-dom';
+   import App from './App';
+   import './index.css';
 
-.box h2 {
-  margin-bottom: 10px;
-}
+   ReactDOM.render(
+     <React.StrictMode>
+       <App />
+     </React.StrictMode>,
+     document.getElementById('root')
+   );
+   ```
 
-.box.collapsed {
-  height: 50px;
-}
-
-.popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  cursor: pointer;
-}
-```
-
-### Step 5: Run the Project
-
-Run the project using:
-
-```bash
-npm start
-```
-
-This project now includes a flexbox layout with multiple boxes containing content. One of the boxes can be collapsed to show/hide content, and another box opens a popup when clicked.
-
-
-
-
-Certainly! Let's delve into the detailed explanation of how the concepts are used in the provided React project, including Flexbox layout, collapse events, and popup handling.
-
-### Flexbox Layout
-
-Flexbox is a layout model that allows you to design complex layouts with a more predictable way than traditional models.
-
-In the project, the `container` class sets up a flex container, and the `box` class represents a flex item (a box).
-
-```css
-.container {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  height: 100vh;
-  padding: 20px;
-}
-
-.box {
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  padding: 20px;
-  background-color: #3498db;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-```
-
-Here's how Flexbox is utilized:
-
-- `display: flex` sets up the `container` as a flex container.
-- `justify-content` and `align-items` are used to distribute the boxes horizontally (`space-around`) and center them vertically (`center`).
-- `flex-wrap: wrap` allows the boxes to wrap to the next line if they exceed the container's width.
-
-### Collapse Event
-
-Collapse functionality is implemented using React's state management.
-
-```jsx
-const [collapsed, setCollapsed] = useState(false);
-
-const handleCollapse = () => {
-  setCollapsed(!collapsed);
-};
-```
-
-The `collapsed` state is managed using the `useState` hook, and the `handleCollapse` function toggles this state.
-
-The `collapsed` state is then used to conditionally apply the `collapsed` class to a box, which changes its height.
-
-```jsx
-<div className={`box ${collapsed ? 'collapsed' : ''}`} onClick={handleCollapse}>
-  <h2>Title</h2>
-  {collapsed && <p>Content inside the collapsed box.</p>}
-</div>
-```
-
-### Popup Handling
-
-Popup handling is also implemented using React's state management.
-
-```jsx
-const [showPopup, setShowPopup] = useState(false);
-
-const handlePopup = () => {
-  setShowPopup(!showPopup);
-};
-```
-
-The `showPopup` state is managed using the `useState` hook, and the `handlePopup` function toggles this state.
-
-A box with a popup functionality is created, and when clicked, it toggles the `showPopup` state.
-
-```jsx
-<div className="box" onClick={handlePopup}>
-  <h2>Title</h2>
-  <p>Click for Popup</p>
-</div>
-```
-
-The `showPopup` state is then used to conditionally render the popup content.
-
-```jsx
-{showPopup && (
-  <div className="popup" onClick={handlePopup}>
-    Popup Content
-  </div>
-)}
-```
-
-In summary, the project demonstrates how to use Flexbox for layout design, handle collapse events using React state management, and handle popups by conditionally rendering content based on state. The provided code snippets and explanations illustrate how these concepts are implemented and utilized within the project.
+With these files, you should have a basic React-Typescript project structure with the `AccessControlComponent`. You can further customize and expand based on your project needs.
