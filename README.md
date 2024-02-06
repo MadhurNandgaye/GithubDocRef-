@@ -189,3 +189,39 @@ npm install react @mui/material @emotion/react @emotion/styled
 ```
 
 Once installed, you can import and use `AccessControlComponent` in your main application file.
+
+Certainly! Here's the modified content for your `App.tsx` file, which includes the `AccessControlComponent`:
+
+```tsx
+// App.tsx
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AccessControlComponent from './AccessControlComponent';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+
+const theme = createTheme();
+
+const App: React.FC = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AccessControlComponent />
+    </ThemeProvider>
+  );
+};
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+```
+
+Ensure that you have the required dependencies installed in your project. If not, you can install them using:
+
+```bash
+npm install react react-dom @mui/material @emotion/react @emotion/styled
+```
+
+After pasting this content into your `App.tsx` file, you should have the `AccessControlComponent` integrated into your main application. Remember to update your `index.html` file to have a root element with the id "root" where React will mount the application.
