@@ -1,89 +1,77 @@
-Certainly! Here's the simplified project structure with each file content:
+Certainly! If you want to create a table with Material-UI that has columns for "Access Levels," "Edit," "Read Only," and "Disabled," each with a corresponding checkbox, here is an example:
 
-1. **App.tsx:**
-   ```tsx
-   // src/App.tsx
-   import React, { useState } from 'react';
-   import { Checkbox, Button, FormControlLabel, FormGroup, Grid, Paper, Typography, CssBaseline } from '@mui/material';
+```tsx
+// src/TableComponent.tsx
+import React, { useState } from 'react';
+import { Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-   const AccessControlComponent: React.FC = () => {
-     const [accessLevels, setAccessLevels] = useState({
-       edit: false,
-       readOnly: false,
-       disabled: false,
-     });
+const TableComponent: React.FC = () => {
+  const [rows, setRows] = useState([
+    { accessLevel: 'Row 1', edit: false, readOnly: false, disabled: false },
+    { accessLevel: 'Row 2', edit: false, readOnly: false, disabled: false },
+    // Add more rows as needed
+  ]);
 
-     const handleCheckboxChange = (level: keyof typeof accessLevels) => {
-       setAccessLevels((prevLevels) => ({ ...prevLevels, [level]: !prevLevels[level] }));
-     };
+  const handleCheckboxChange = (index: number, column: keyof typeof rows[0]) => {
+    setRows((prevRows) => {
+      const newRows = [...prevRows];
+      newRows[index][column] = !newRows[index][column];
+      return newRows;
+    });
+  };
 
-     const handleUpdate = () => {
-       console.log('Updating Access Levels:', accessLevels);
-       // Add your logic to handle the update
-     };
+  return (
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Access Levels</TableCell>
+            <TableCell>Edit</TableCell>
+            <TableCell>Read Only</TableCell>
+            <TableCell>Disabled</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.accessLevel}</TableCell>
+              <TableCell>
+                <Checkbox checked={row.edit} onChange={() => handleCheckboxChange(index, 'edit')} />
+              </TableCell>
+              <TableCell>
+                <Checkbox checked={row.readOnly} onChange={() => handleCheckboxChange(index, 'readOnly')} />
+              </TableCell>
+              <TableCell>
+                <Checkbox checked={row.disabled} onChange={() => handleCheckboxChange(index, 'disabled')} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+};
 
-     return (
-       <Grid container justifyContent="center" alignItems="center" style={{ height: '100vh' }}>
-         <Grid item xs={10} md={6} lg={4}>
-           <Paper elevation={3} style={{ padding: '20px' }}>
-             <Typography variant="h5" gutterBottom>
-               Access Levels
-             </Typography>
-             <FormGroup>
-               <FormControlLabel
-                 control={<Checkbox checked={accessLevels.edit} onChange={() => handleCheckboxChange('edit')} />}
-                 label="Edit"
-               />
-               <FormControlLabel
-                 control={<Checkbox checked={accessLevels.readOnly} onChange={() => handleCheckboxChange('readOnly')} />}
-                 label="Read Only"
-               />
-               <FormControlLabel
-                 control={<Checkbox checked={accessLevels.disabled} onChange={() => handleCheckboxChange('disabled')} />}
-                 label="Disabled"
-               />
-             </FormGroup>
-             <Button variant="contained" color="primary" onClick={handleUpdate} style={{ marginTop: '10px' }}>
-               Update
-             </Button>
-           </Paper>
-         </Grid>
-       </Grid>
-     );
-   };
-
-   export default AccessControlComponent;
-   ```
-
-2. **index.tsx:**
-   ```tsx
-   // src/index.tsx
-   import React from 'react';
-   import ReactDOM from 'react-dom';
-   import AccessControlComponent from './App';
-   import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
-
-   const theme = createTheme();
-
-   ReactDOM.render(
-     <ThemeProvider theme={theme}>
-       <CssBaseline />
-       <AccessControlComponent />
-     </ThemeProvider>,
-     document.getElementById('root')
-   );
-   ```
-
-3. **index.css:**
-   ```css
-   /* src/index.css */
-   /* Add your global styles here */
-   ```
-
-Make sure you have the necessary dependencies installed:
-
-```bash
-npm install react react-dom @mui/material @emotion/react @emotion/styled
+export default TableComponent;
 ```
 
-This simplified project structure contains only three files, making it easy to manage. Feel free to copy and paste this code into your project. If you have any further questions or requests, let me know!
+You can then use this `TableComponent` in your `App.tsx` or wherever you need it. Simply import and include it:
+
+```tsx
+// src/App.tsx
+import React from 'react';
+import TableComponent from './TableComponent';
+
+const App: React.FC = () => {
+  return (
+    <div>
+      <h1>Welcome to My Table App!</h1>
+      <TableComponent />
+    </div>
+  );
+};
+
+export default App;
+```
+
+Remember to adjust the import paths if needed based on your project structure.
