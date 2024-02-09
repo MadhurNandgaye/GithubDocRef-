@@ -1,3 +1,41 @@
+Certainly! If you want to maintain the same naming convention for the loading logic, you can structure the code like this:
+
+```tsx
+import React from 'react';
+import { Box } from 'your-component-library'; // Make sure to import your component library
+import { AccessLevel } from './types';
+import UserItemSkeleton from './UserItemSkeleton';
+import AdminUserItem from './AdminUserItem';
+
+interface UsersComponentProps {
+  loading: {
+    users: boolean;
+  };
+  users: AccessLevel[]; // Assuming users have the same structure as AccessLevel
+}
+
+const UsersComponent: React.FC<UsersComponentProps> = ({ users, loading }) => {
+  return (
+    <Box className="users-box">
+      {loading.users ? (
+        Array.from({ length: 9 }, (_, index) => (
+          <UserItemSkeleton key={index} />
+        ))
+      ) : (
+        users.map((user) => (
+          <AdminUserItem user={user} key={user.level} />
+        ))
+      )}
+    </Box>
+  );
+};
+
+export default UsersComponent;
+```
+
+In this example, I've assumed that the structure of your users matches the `AccessLevel` interface. Adjust the `users` prop type according to your actual user data structure. The key for each `AdminUserItem` is set to `user.level` based on the assumption that `level` is a unique identifier for each user. Update it according to your actual data structure.
+
+
 
 Certainly! You can define a TypeScript interface for the access levels and then use it in your constant. Here's the updated file:
 
