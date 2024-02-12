@@ -1,183 +1,102 @@
-Certainly! If you want to maintain the same naming convention for the loading logic, you can structure the code like this:
+Certainly! If you don't need the first name and last name in the `User` interface, you can simplify it. Here's the modified code:
 
-```tsx
-import React from 'react';
-import { Box } from 'your-component-library'; // Make sure to import your component library
-import { AccessLevel } from './types';
-import UserItemSkeleton from './UserItemSkeleton';
-import AdminUserItem from './AdminUserItem';
+1. **Update `accessLevels.ts`:**
 
-interface UsersComponentProps {
-  loading: {
-    users: boolean;
-  };
-  users: AccessLevel[]; // Assuming users have the same structure as AccessLevel
-}
+   ```typescript
+   // accessLevels.ts
 
-const UsersComponent: React.FC<UsersComponentProps> = ({ users, loading }) => {
-  return (
-    <Box className="users-box">
-      {loading.users ? (
-        Array.from({ length: 9 }, (_, index) => (
-          <UserItemSkeleton key={index} />
-        ))
-      ) : (
-        users.map((user) => (
-          <AdminUserItem user={user} key={user.level} />
-        ))
-      )}
-    </Box>
-  );
-};
+   export interface AccessLevel {
+     level: string;
+     action: string;
+   }
 
-export default UsersComponent;
-```
+   export const accessLevels: AccessLevel[] = [
+     { level: 'Users + Access', action: 'Can adjust user access' },
+     { level: 'Actions', action: 'Can change action status' },
+     { level: 'Orders', action: 'Can add price exceptions' },
+     { level: 'Holidays', action: 'Can add/delete holidays' },
+     { level: 'SLAS', action: 'Can change SLAS' },
+     { level: 'Product Groups', action: 'Can create and adjust groups' },
+     { level: 'Enable Vendor', action: 'Can enable or disable a vendor' },
+     { level: 'Vendor Profile Main', action: 'Can adjust contact, account, notes, and document info' },
+     { level: 'Vendor Capacity', action: 'Can add and adjust capacity' },
+     { level: 'Vendor Products & Pricing', action: 'Can add and adjust pricing' },
+     { level: 'Vendor Product Enabling', action: 'Can enable/disable products' },
+     { level: 'Vendor Billing', action: 'Can export/import billing details from vendor' },
+     { level: 'Vendor Billing Reconciliation', action: 'Can approve billing exceptions' },
+   ];
+   ```
 
-In this example, I've assumed that the structure of your users matches the `AccessLevel` interface. Adjust the `users` prop type according to your actual user data structure. The key for each `AdminUserItem` is set to `user.level` based on the assumption that `level` is a unique identifier for each user. Update it according to your actual data structure.
+2. **Update `YourComponent.tsx`:**
 
+   ```tsx
+   // YourComponent.tsx
 
+   import React from 'react';
+   import { Box, Paper, Stack } from '@material-ui/core';
+   import { AccessLevel } from './path-to-accessLevels/accessLevels'; // Update the path accordingly
 
-Certainly! You can define a TypeScript interface for the access levels and then use it in your constant. Here's the updated file:
+   // Assume you have UserItemSkeleton and AdminUserItem components defined
 
-```typescript
-// accessLevels.ts
+   interface User {
+     accessLevels: AccessLevel[];
+   }
 
-interface AccessLevel {
-  level: string;
-  action: string;
-}
+   interface YourComponentProps {
+     loading: { users: boolean };
+     users: User[];
+   }
 
-export const accessLevels: AccessLevel[] = [
-  { level: 'Users + Access', action: 'Can adjust user access' },
-  { level: 'Actions', action: 'Can change action status' },
-  { level: 'Orders', action: 'Can add price exceptions' },
-  { level: 'Holidays', action: 'Can add/delete holidays' },
-  { level: 'SLAS', action: 'Can change SLAS' },
-  { level: 'Product Groups', action: 'Can create and adjust groups' },
-  { level: 'Enable Vendor', action: 'Can enable or disable a vendor' },
-  { level: 'Vendor Profile Main', action: 'Can adjust contact, account, notes, and document info' },
-  { level: 'Vendor Capacity', action: 'Can add and adjust capacity' },
-  { level: 'Vendor Products & Pricing', action: 'Can add and adjust pricing' },
-  { level: 'Vendor Product Enabling', action: 'Can enable/disable products' },
-  { level: 'Vendor Billing', action: 'Can export/import billing details from vendor' },
-  { level: 'Vendor Billing Reconciliation', action: 'Can approve billing exceptions' },
-];
-```
+   const YourComponent: React.FC<YourComponentProps> = ({ loading, users }) => {
+     return (
+       <Stack paddingTop={10}>
+         <Paper className="section-container-user-edit-screen">
+           {/* Your other components */}
+           <UserListHeaderAdminAccess />
+           <Box className="users-box">
+             {loading.users ? (
+               Array.from({ length: 9 }, (v, i) => <UserItemSkeleton key={i} />)
+             ) : (
+               users.map((user, index) => (
+                 <AdminUserItem user={user} key={index} />
+               ))
+             )}
+           </Box>
+         </Paper>
+       </Stack>
+     );
+   };
 
-Now, you have a clear TypeScript interface (`AccessLevel`) for your access levels. This will help in maintaining type safety throughout your React project.
+   export default YourComponent;
+   ```
 
-Certainly! You can store this data in a TypeScript file as a constant and then import it into your React project. Here's an example file named `accessLevels.ts`:
+3. **Update `App.tsx`:**
 
-```typescript
-// accessLevels.ts
+   ```tsx
+   // App.tsx
 
-export const accessLevels = [
-  { level: 'Users + Access', action: 'Can adjust user access' },
-  { level: 'Actions', action: 'Can change action status' },
-  { level: 'Orders', action: 'Can add price exceptions' },
-  { level: 'Holidays', action: 'Can add/delete holidays' },
-  { level: 'SLAS', action: 'Can change SLAS' },
-  { level: 'Product Groups', action: 'Can create and adjust groups' },
-  { level: 'Enable Vendor', action: 'Can enable or disable a vendor' },
-  { level: 'Vendor Profile Main', action: 'Can adjust contact, account, notes, and document info' },
-  { level: 'Vendor Capacity', action: 'Can add and adjust capacity' },
-  { level: 'Vendor Products & Pricing', action: 'Can add and adjust pricing' },
-  { level: 'Vendor Product Enabling', action: 'Can enable/disable products' },
-  { level: 'Vendor Billing', action: 'Can export/import billing details from vendor' },
-  { level: 'Vendor Billing Reconciliation', action: 'Can approve billing exceptions' },
-];
-```
+   import React from 'react';
+   import YourComponent from './path-to-your-component/YourComponent'; // Update the path accordingly
+   import { accessLevels } from './path-to-accessLevels/accessLevels'; // Update the path accordingly
 
-You can then import this constant in your React component:
+   const App: React.FC = () => {
+     const loading = { users: false }; // Assume loading state
+     const users = [
+       {
+         accessLevels: [accessLevels[0], accessLevels[1]], // Add the relevant access levels
+       },
+       // Add more users as needed
+     ];
 
-```typescript
-// Your React Component
+     return (
+       <div>
+         {/* Other components */}
+         <YourComponent loading={loading} users={users} />
+       </div>
+     );
+   };
 
-import React from 'react';
-import { accessLevels } from './accessLevels';
+   export default App;
+   ```
 
-const YourComponent: React.FC = () => {
-  return (
-    <div>
-      <h1>Access Levels</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Access Level</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {accessLevels.map((level, index) => (
-            <tr key={index}>
-              <td>{level.level}</td>
-              <td>{level.action}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default YourComponent;
-```
-
-Make sure to adjust the paths and file names according to your project structure.
-
-
-
-
-Access Levels
-
-Users + Access
-
-Can adjust user access
-
-Actions
-
-Can change action status
-
-Orders
-
-Can add price exceptions
-
-Holidays
-
-Can add/delete holidays
-
-SLAS
-
-Can change SLAS
-
-Product Groups
-
-Can create and adjust groups
-
-Enable Vendor
-
-Can enable or disable a vendor
-
-Vendor Profile Main
-
-Can adjust contact, account, notes, and document info
-
-Vendor Capacity
-
-Can add and adjust capacity
-
-Vendor Products & Pricing
-
-Can Add and adjust pricing
-
-Vendor Product Enabling
-
-Can enable/disable products
-
-Vendor Billing
-
-Can export/import billing detalls from vendor
-
-Vendor Billing Reconciliation
-
-Can approve billing exceptions
+This way, the `User` interface only includes the `accessLevels` property, and you can update the `users` array accordingly.
