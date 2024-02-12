@@ -1,8 +1,8 @@
-Certainly! Here's the modified code in TypeScript:
+Certainly! Here's a simplified code snippet where the menu items stay within the component even after scrolling:
 
 ```tsx
 import React from 'react';
-import { Stack, Typography, Popper, Paper, MenuList, MenuItem, ClickAwayListener } from '@mui/material';
+import { Stack, Typography, Paper, MenuList, MenuItem, Popper, ClickAwayListener } from '@mui/material';
 
 interface YourComponentProps {
   user: { email: string; firstName: string; lastName: string };
@@ -36,17 +36,20 @@ const YourComponent: React.FC<YourComponentProps> = ({
 
         <Typography className="users-medium">Admin</Typography>
 
-        <Stack style={{ position: 'relative' }}>
-          {/* Using inline styles for positioning */}
-          <ActionButton
-            anchorEl={anchorEl}
-            menuItems={UserContent.ROW_OPTIONS}
-            open={open}
-            handleActionClick={handleActionClick}
-            handleClick={handleClick}
-            handleClickAway={handleClickAway}
-            style={{ position: 'absolute', zIndex: 1 }}
-          />
+        <Stack>
+          <Popper open={open} anchorEl={anchorEl} placement="bottom-end" style={{ position: 'fixed', maxHeight: '200px', overflowY: 'auto' }}>
+            <ClickAwayListener onClickAway={handleClickAway}>
+              <Paper>
+                <MenuList>
+                  {['Option 1', 'Option 2', 'Option 3'].map((option, index) => (
+                    <MenuItem key={index} onClick={() => handleActionClick(option)}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Paper>
+            </ClickAwayListener>
+          </Popper>
         </Stack>
 
       </Stack>
@@ -55,39 +58,7 @@ const YourComponent: React.FC<YourComponentProps> = ({
   );
 };
 
-interface ActionButtonProps {
-  anchorEl: null | HTMLElement;
-  open: boolean;
-  handleActionClick: (option: string) => void;
-  handleClick: () => void;
-  handleClickAway: () => void;
-  menuItems: string[];
-}
-
-const ActionButton: React.FC<ActionButtonProps> = ({
-  anchorEl,
-  open,
-  handleActionClick,
-  handleClick,
-  handleClickAway,
-  menuItems,
-}) => {
-  return (
-    <Popper open={open} anchorEl={anchorEl} placement="bottom-end">
-      <ClickAwayListener onClickAway={handleClickAway}>
-        <Paper style={{ maxHeight: '200px', overflowY: 'auto' }}>
-          <MenuList>
-            {menuItems.map((option, index) => (
-              <MenuItem key={index} onClick={() => handleActionClick(option)}>
-                {option}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Paper>
-      </ClickAwayListener>
-    </Popper>
-  );
-};
+export default YourComponent;
 ```
 
-Make sure to adapt the code according to your specific requirements and import the necessary modules from Material-UI.
+This code includes a simple structure with an example of three menu items. The styles applied to the `Popper` ensure that the menu items stay within the component and provide scrolling when the content exceeds the specified height. Adjust the content and styling as needed for your specific use case.
