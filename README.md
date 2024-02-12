@@ -1,3 +1,38 @@
+import React, { useState } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedRounded from '@mui/icons-material/RadioButtonCheckedRounded';
+
+const YourComponent = () => {
+  const [isCheckboxDisabled, setCheckboxDisabled] = useState(false);
+
+  const handleButtonClick = () => {
+    // Disable the checkbox when the button is clicked
+    setCheckboxDisabled(true);
+  };
+
+  return (
+    <div>
+      <Typography className="users-medium">
+        <Checkbox
+          icon={<RadioButtonUnchecked fontSize="medium" />}
+          checkedIcon={<RadioButtonCheckedRounded fontSize="medium" />}
+          sx={{ mr: '10px' }}
+          disabled={isCheckboxDisabled}
+        />
+      </Typography>
+
+      <button onClick={handleButtonClick}>Click me to disable Checkbox</button>
+    </div>
+  );
+};
+
+export default YourComponent;
+
+
+
+
 Certainly! If you don't need the first name and last name in the `User` interface, you can simplify it. Here's the modified code:
 
 1. **Update `accessLevels.ts`:**
