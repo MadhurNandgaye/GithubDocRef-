@@ -1,3 +1,43 @@
+Certainly! Here's the modified code with styles applied to the `Stack` containing the `ActionButton`:
+
+```jsx
+<Stack direction="row" justifyContent="space-between" alignItems="center">
+
+  <Stack direction="row">
+
+    <Typography sx={{ paddingRight: 90 }} className="users-medium">
+      {user.email}
+    </Typography>
+
+    <Typography className="users-medium">{user.firstName}</Typography>
+
+    <Typography className="users-medium">{user.lastName}</Typography>
+
+    <Typography className="users-medium">Admin</Typography>
+
+    <Stack style={{ position: 'relative' }}>
+      {/* Using inline styles for positioning */}
+      <ActionButton
+        anchorEl={anchorEl}
+        menuItems={UserContent.ROW_OPTIONS}
+        open={open}
+        handleActionClick={handleActionClick}
+        handleClick={handleClick}
+        handleClickAway={handleClickAway}
+        style={{ position: 'absolute', zIndex: 1 }}
+      />
+    </Stack>
+
+  </Stack>
+
+</Stack>
+```
+
+This should help control the scrolling behavior within the `Stack` containing the `ActionButton`. Adjust the styles according to your specific design needs.
+
+
+
+
 Certainly, if you want to control the scrolling behavior within the `Stack` containing the `ActionButton`, you can apply styles directly to the `Stack` component. Here's an example:
 
 ```jsx
