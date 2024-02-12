@@ -1,3 +1,4 @@
+```jsx
 import React, { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import Typography from '@mui/material/Typography';
@@ -31,7 +32,7 @@ const YourComponent = () => {
 export default YourComponent;
 
 
-
+```
 
 Certainly! If you don't need the first name and last name in the `User` interface, you can simplify it. Here's the modified code:
 
