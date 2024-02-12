@@ -1,3 +1,102 @@
+Certainly! You can use a single state variable to manage the checked state for all checkboxes and radio buttons. Here's an updated version of your component:
+
+```jsx
+import React, { useState } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedRounded from '@mui/icons-material/RadioButtonCheckedRounded';
+
+const YourComponent = () => {
+  const [checkedState, setCheckedState] = useState({
+    checkbox1: false,
+    checkbox2: false,
+    checkbox3: false,
+    radio1: false,
+    radio2: false,
+    radio3: false,
+  });
+
+  const handleCheckboxClick = (checkbox) => {
+    setCheckedState((prevState) => ({
+      ...prevState,
+      [checkbox]: !prevState[checkbox],
+    }));
+  };
+
+  const handleRadioClick = (radio) => {
+    setCheckedState({
+      checkbox1: false,
+      checkbox2: false,
+      checkbox3: false,
+      radio1: radio === 'radio1',
+      radio2: radio === 'radio2',
+      radio3: radio === 'radio3',
+    });
+  };
+
+  return (
+    <div>
+      <Typography className="users-medium">
+        <Checkbox
+          icon={<RadioButtonUnchecked fontSize="medium" />}
+          checkedIcon={<RadioButtonCheckedRounded fontSize="medium" />}
+          sx={{ mr: '10px' }}
+          checked={checkedState.checkbox1}
+          onClick={() => handleCheckboxClick('checkbox1')}
+        />
+        <Checkbox
+          icon={<RadioButtonUnchecked fontSize="medium" />}
+          checkedIcon={<RadioButtonCheckedRounded fontSize="medium" />}
+          sx={{ mr: '10px' }}
+          checked={checkedState.checkbox2}
+          onClick={() => handleCheckboxClick('checkbox2')}
+        />
+        <Checkbox
+          icon={<RadioButtonUnchecked fontSize="medium" />}
+          checkedIcon={<RadioButtonCheckedRounded fontSize="medium" />}
+          sx={{ mr: '10px' }}
+          checked={checkedState.checkbox3}
+          onClick={() => handleCheckboxClick('checkbox3')}
+        />
+      </Typography>
+
+      <label>
+        <input
+          type="radio"
+          onClick={() => handleRadioClick('radio1')}
+          checked={checkedState.radio1}
+        />
+        Radio Button 1
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          onClick={() => handleRadioClick('radio2')}
+          checked={checkedState.radio2}
+        />
+        Radio Button 2
+      </label>
+
+      <label>
+        <input
+          type="radio"
+          onClick={() => handleRadioClick('radio3')}
+          checked={checkedState.radio3}
+        />
+        Radio Button 3
+      </label>
+    </div>
+  );
+};
+
+export default YourComponent;
+```
+
+In this version, `checkedState` is an object containing the checked state for each checkbox and radio button. The `handleCheckboxClick` and `handleRadioClick` functions update the state accordingly.
+
+
 
 ```jsx
 import React, { useState } from 'react';
