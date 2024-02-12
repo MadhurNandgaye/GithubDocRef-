@@ -1,3 +1,34 @@
+Certainly, if you want to control the scrolling behavior within the `Stack` containing the `ActionButton`, you can apply styles directly to the `Stack` component. Here's an example:
+
+```jsx
+<Stack direction="row" justifyContent="space-between" alignItems="center">
+
+  <Stack direction="row">
+
+    {/* Your other components... */}
+
+    <Stack style={{ position: 'relative' }}>
+      {/* Using inline styles for positioning */}
+      <ActionButton
+        anchorEl={anchorEl}
+        menuItems={UserContent.ROW_OPTIONS}
+        open={open}
+        handleActionClick={handleActionClick}
+        handleClick={handleClick}
+        handleClickAway={handleClickAway}
+        style={{ position: 'absolute', zIndex: 1 }}
+      />
+    </Stack>
+
+  </Stack>
+
+</Stack>
+```
+
+In this example, I added `style={{ position: 'relative' }}` to the inner `Stack` containing the `ActionButton`. This should ensure that the menu stays within the bounds of its parent container and does not scroll beyond it. Adjust the styles as needed based on your specific layout and design requirements.
+
+
+
 Certainly! You can use a single state variable to manage the checked state for all checkboxes and radio buttons. Here's an updated version of your component:
 
 ```jsx
