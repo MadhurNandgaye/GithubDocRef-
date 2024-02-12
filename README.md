@@ -1,3 +1,53 @@
+
+```jsx
+import React, { useState } from 'react';
+import Checkbox from '@mui/material/Checkbox';
+import Typography from '@mui/material/Typography';
+import RadioButtonUnchecked from '@mui/icons-material/RadioButtonUnchecked';
+import RadioButtonCheckedRounded from '@mui/icons-material/RadioButtonCheckedRounded';
+
+const YourComponent = () => {
+  const [isChecked, setChecked] = useState(false);
+
+  const handleCheckboxClick = () => {
+    setChecked(!isChecked);
+  };
+
+  const handleRadioClick = () => {
+    // Uncheck the checkbox when the radio button is clicked
+    setChecked(false);
+  };
+
+  return (
+    <div>
+      <Typography className="users-medium">
+        <Checkbox
+          icon={<RadioButtonUnchecked fontSize="medium" />}
+          checkedIcon={<RadioButtonCheckedRounded fontSize="medium" />}
+          sx={{ mr: '10px' }}
+          checked={isChecked}
+          onClick={handleCheckboxClick}
+        />
+      </Typography>
+
+      <label>
+        <input type="radio" onClick={handleRadioClick} />
+        Radio Button
+      </label>
+      
+      <label>
+        <input type="radio" />
+        Another Radio Button
+      </label>
+    </div>
+  );
+};
+
+export default YourComponent;
+```
+
+
+
 ```jsx
 import React, { useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
