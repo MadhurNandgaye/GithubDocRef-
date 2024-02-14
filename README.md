@@ -1,4 +1,4 @@
-If you want to avoid appending empty parameters to the query string, you can adjust the function to include them only when the corresponding values are present. Here's an updated version of the function that addresses this concern:
+Certainly, let's break down the TypeScript function `rollUpQuery` and ensure that it doesn't pass empty values by using constants:
 
 ```typescript
 const rollUpQuery = (
@@ -6,6 +6,10 @@ const rollUpQuery = (
    specifiedType: IProductType | null,
    state: IState | null,
 ): string => {
+   const allGlobalTypes = 'your_constant_for_empty_globalType';
+   const allSpecifiedTypes = { specifiedType: 'your_constant_for_empty_specifiedType' };
+   const allStates = 'your_constant_for_empty_state';
+
    let query = '';
 
    if (globalType && globalType !== allGlobalTypes) {
@@ -24,9 +28,12 @@ const rollUpQuery = (
 };
 ```
 
-In this updated version:
-- The `query` variable is initialized as an empty string.
-- Conditions are used to check if each parameter is present and meets specific criteria before appending it to the query string.
-- The ternary operator (`? :`) is utilized to determine whether to include the ampersand (`&`) based on whether the query string is already populated.
+Explanation:
 
-This way, the function ensures that only valid and non-empty parameters are included in the generated query string.
+1. Constants (`allGlobalTypes`, `allSpecifiedTypes`, and `allStates`) are defined for empty or default values.
+
+2. The function checks each parameter (`globalType`, `specifiedType`, and `state`) and appends them to the query string only if they are not empty and meet specific conditions.
+
+3. If any parameter is empty or has a default value, the corresponding constant is used in the query string.
+
+This ensures that the generated query string doesn't contain empty values and uses constants in their place when necessary. Adjust the constant values according to your requirements.
