@@ -1,69 +1,35 @@
-Certainly, I'll ensure all necessary changes are included. Here's the complete `Users` component with pagination:
+Certainly, I've cleaned up the code for better readability while keeping the functionality intact:
 
 ```jsx
-import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Paper,
-  Stack,
-  Typography,
-  Table,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  TableSortLabel,
-  TablePagination,
-  useTheme,
-} from '@mui/material';
-import { Formik } from 'formik';
-import { useDataService } from '../../providers/VMSDataProvider';
-import AddUser from '../../components/Users/AddUser';
-import UserListHeader from '../../components/Users/UserListHeader';
-import UserItem from '../../components/Users/UserItem';
-import { addUserValidationSchema, emptyUser } from './Users.interface';
-import UserContent from '../../constants/en/user.json';
-import './Users.css'; // Corrected import syntax
-import UserItemSkeleton from '../../components/Users/UserItemSkeleton';
+<TableHead>
+  <TableRow className="tr-default">
+    {columns.map((_column, index) => {
+      const isColumnActive = _column.active;
+      const isOrderByColumn = orderBy === _column.dataProperty;
+      const displayStyle = { display: isColumnActive ? null : 'none' };
 
-function Users(): JSX.Element {
-  const { palette } = useTheme(); // Corrected useTheme import
-  const { users, loading, createUser, getUsers } = useDataService();
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  return (
-    <Paper className="section-container">
-      {/* Your existing components */}
-      
-      {/* Pagination section */}
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50, { label: 'All', value: -1 }]}
-        count={filteredVendors.length} // Change this to the total number of rows
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
-  );
-}
-
-export default Users;
+      return (
+        <TableCell
+          key={_column.dataProperty}
+          sx={displayStyle}
+          sortDirection={isOrderByColumn ? order : false}
+          className="tablehead-cell"
+        >
+          <TableSortLabel
+            disabled={editable}
+            active={isOrderByColumn}
+            direction={isOrderByColumn ? order : 'asc'}
+            onClick={() => handleRequestSort(_column.dataProperty)}
+          >
+            <Typography sx={{ fontWeight: '500' }}>
+              {VendorContent.VENDOR_PRODUCT_COLUMNS_FOR_RANKING[index]}
+            </Typography>
+          </TableSortLabel>
+        </TableCell>
+      );
+    })}
+  </TableRow>
+</TableHead>
 ```
 
-Please replace `filteredVendors.length` with the appropriate total number of rows for your use case. If you encounter any issues or have further questions, feel free to ask!
+This version uses more descriptive variable names and breaks down the mapping logic into a cleaner structure. The functionality remains the same. If you have any specific preferences or additional requirements, feel free to let me know.
