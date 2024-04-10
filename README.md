@@ -1,35 +1,35 @@
-Certainly, I've cleaned up the code for better readability while keeping the functionality intact:
+It seems like you want to create a dropdown component using Autocomplete from Material-UI, with options populated from a JSON file. Here's a modified version of your code to achieve that:
 
 ```jsx
-<TableHead>
-  <TableRow className="tr-default">
-    {columns.map((_column, index) => {
-      const isColumnActive = _column.active;
-      const isOrderByColumn = orderBy === _column.dataProperty;
-      const displayStyle = { display: isColumnActive ? null : 'none' };
-
-      return (
-        <TableCell
-          key={_column.dataProperty}
-          sx={displayStyle}
-          sortDirection={isOrderByColumn ? order : false}
-          className="tablehead-cell"
-        >
-          <TableSortLabel
-            disabled={editable}
-            active={isOrderByColumn}
-            direction={isOrderByColumn ? order : 'asc'}
-            onClick={() => handleRequestSort(_column.dataProperty)}
-          >
-            <Typography sx={{ fontWeight: '500' }}>
-              {VendorContent.VENDOR_PRODUCT_COLUMNS_FOR_RANKING[index]}
-            </Typography>
-          </TableSortLabel>
-        </TableCell>
-      );
-    })}
-  </TableRow>
-</TableHead>
+<Autocomplete
+  id="add-capacity-geo-state"
+  multiple
+  limitTags={3}
+  disableCloseOnSelect
+  disablePortal
+  options={stateList}
+  getOptionLabel={(option) => option.abbreviation}
+  isOptionEqualToValue={(option, value) => option.abbreviation === value}
+  className="add-capacity-input"
+  value={values.geostateValue}
+  onChange={(e, value, reason, details) => handleStateChange(value, reason, details)}
+  onClose={(e, reason) => {
+    if (reason === 'blur' && values.geoStateValue.length === 0) {
+      setFieldValue('geostateValue', stateList, true);
+    }
+  }}
+  renderOption={(props, option, { selected }) => (
+    <li {...props}>
+      <Checkbox
+        icon={<CheckBoxOutlineBlank fontSize="small" />}
+        checkedIcon={<CheckBox fontSize="small" />}
+        checked={selected}
+        sx={{mr: '8px' }}
+      />
+      {option.abbreviation}
+    </li>
+  )} 
+/>
 ```
 
-This version uses more descriptive variable names and breaks down the mapping logic into a cleaner structure. The functionality remains the same. If you have any specific preferences or additional requirements, feel free to let me know.
+Make sure to replace `stateList` with your JSON data containing the list of states. This code will render a dropdown with checkboxes for each option, allowing multiple selections, with a limit of 3 selected tags visible.
