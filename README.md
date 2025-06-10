@@ -1,224 +1,234 @@
-Here’s a complete Go backend REST API project tailored for your Logic App Monitor—file by file. It’s built using Gin framework and follows a clean folder structure with separation of responsibilities.
-
-⸻
-
-🗂 Project Structure
-
-logic-monitor-api/
-├── cmd/
-│   └── server/
-│       └── main.go
-├── internal/
-│   ├── config/
-│   │   └── config.go
-│   ├── api/
-│   │   ├── handlers.go
-│   │   └── routes.go
-│   ├── logic/
-│   │   └── monitor.go
-│   ├── model/
-│   │   └── status.go
-│   └── svc/
-│       └── servicecontext.go
-├── go.mod
-└── go.sum
-
-This approach is based on layered project structures recommended in Go best practices  ￼.
-
-⸻
-
-📄 File-by-File Code
-
-1. cmd/server/main.go
-
-package main
-
-import "logic-monitor-api/internal/api"
-
-func main() {
-    r := api.SetupRouter()
-    r.Run(":8080") // starts server
-}
-
-
-⸻
-
-2. internal/config/config.go
-
-package config
-
-import "os"
-
-type Config struct {
-    InternalURL string
-    ExternalURL string
-}
-
-func Load() *Config {
-    return &Config{
-        InternalURL: os.Getenv("INTERNAL_URL"),
-        ExternalURL: os.Getenv("EXTERNAL_URL"),
+/* ==========================
+   FILE: angular.json
+   ========================== */
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "logic-app-monitor": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/logic-app-monitor",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.css"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "logic-app-monitor:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "logic-app-monitor:build:production"
+            }
+          }
+        }
+      }
     }
+  },
+  "defaultProject": "logic-app-monitor"
 }
 
+/* ==========================
+   FILE: src/app/app.module.ts
+   ========================== */
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { AppComponent } from './app.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { StatusCardComponent } from './components/status-card/status-card.component';
+import { RouterModule, Routes } from '@angular/router';
+import { NotificationSettingsComponent } from './components/notification-settings/notification-settings.component';
+import { SelfHealComponent } from './components/self-heal/self-heal.component';
 
-⸻
+const routes: Routes = [
+  { path: '', component: DashboardComponent },
+  { path: 'notifications', component: NotificationSettingsComponent },
+  { path: 'self-heal', component: SelfHealComponent }
+];
 
-3. internal/model/status.go
+@NgModule({
+  declarations: [
+    AppComponent,
+    DashboardComponent,
+    StatusCardComponent,
+    NotificationSettingsComponent,
+    SelfHealComponent
+  ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot(routes),
+    MatToolbarModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTableModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
 
-package model
+/* ==========================
+   FILE: src/app/app.component.html
+   ========================== */
+<mat-toolbar color="primary">
+  Logic App Monitor
+  <span class="spacer"></span>
+  <button mat-button routerLink="/">Dashboard</button>
+  <button mat-button routerLink="/notifications">Notifications</button>
+  <button mat-button routerLink="/self-heal">Self-Heal</button>
+</mat-toolbar>
+<router-outlet></router-outlet>
 
-type EndpointStatus string
+/* ==========================
+   FILE: src/app/components/dashboard/dashboard.component.ts
+   ========================== */
+import { Component } from '@angular/core';
 
-const (
-    Green  EndpointStatus = "Green"
-    Yellow EndpointStatus = "Yellow"
-    Red    EndpointStatus = "Red"
-)
-
-type StatusResponse struct {
-    Endpoint string         `json:"endpoint"`
-    Status   EndpointStatus `json:"status"`
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
+})
+export class DashboardComponent {
+  endpoints = [
+    { name: 'Internal API', status: 'Green' },
+    { name: 'External UI', status: 'Yellow' },
+    { name: 'Auth Service', status: 'Red' }
+  ];
 }
 
+/* ==========================
+   FILE: src/app/components/dashboard/dashboard.component.html
+   ========================== */
+<div class="dashboard">
+  <app-status-card *ngFor="let ep of endpoints" [endpoint]="ep"></app-status-card>
+</div>
 
-⸻
-
-4. internal/svc/servicecontext.go
-
-package svc
-
-import "logic-monitor-api/internal/config"
-
-type ServiceContext struct {
-    Config *config.Config
+/* ==========================
+   FILE: src/app/components/dashboard/dashboard.component.css
+   ========================== */
+.dashboard {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  flex-wrap: wrap;
 }
 
-func NewServiceContext(cfg *config.Config) *ServiceContext {
-    return &ServiceContext{Config: cfg}
-}
+/* ==========================
+   FILE: src/app/components/status-card/status-card.component.ts
+   ========================== */
+import { Component, Input } from '@angular/core';
 
+@Component({
+  selector: 'app-status-card',
+  templateUrl: './status-card.component.html',
+  styleUrls: ['./status-card.component.css']
+})
+export class StatusCardComponent {
+  @Input() endpoint: any;
 
-⸻
-
-5. internal/logic/monitor.go
-
-package logic
-
-import (
-    "logic-monitor-api/internal/model"
-    "net/http"
-    "time"
-)
-
-func CheckEndpoint(name, url string) model.StatusResponse {
-    client := http.Client{Timeout: 3 * time.Second}
-    resp, err := client.Get(url)
-    status := model.Green
-    if err != nil || resp.StatusCode >= 500 {
-        status = model.Red
-    } else if resp.StatusCode >= 400 {
-        status = model.Yellow
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'Green': return '#4caf50';
+      case 'Yellow': return '#ffeb3b';
+      case 'Red': return '#f44336';
+      default: return '#ccc';
     }
-    return model.StatusResponse{Endpoint: name, Status: status}
+  }
 }
 
+/* ==========================
+   FILE: src/app/components/status-card/status-card.component.html
+   ========================== */
+<mat-card [style.border-left]="'5px solid ' + getStatusColor(endpoint.status)">
+  <mat-card-title>{{ endpoint.name }}</mat-card-title>
+  <mat-card-content>
+    Status: <strong>{{ endpoint.status }}</strong>
+  </mat-card-content>
+</mat-card>
 
-⸻
-
-6. internal/api/routes.go
-
-package api
-
-import (
-    "logic-monitor-api/internal/api/handlers"
-
-    "github.com/gin-gonic/gin"
-)
-
-func SetupRouter() *gin.Engine {
-    r := gin.Default()
-    v1 := r.Group("/api/v1")
-    {
-        v1.GET("/statuses", handlers.GetStatuses)
-    }
-    return r
+/* ==========================
+   FILE: src/app/components/status-card/status-card.component.css
+   ========================== */
+mat-card {
+  width: 200px;
 }
 
+/* ==========================
+   FILE: src/app/components/notification-settings/notification-settings.component.ts
+   ========================== */
+import { Component } from '@angular/core';
 
-⸻
+@Component({
+  selector: 'app-notification-settings',
+  template: `<p>Notification settings will be here.</p>`
+})
+export class NotificationSettingsComponent {}
 
-7. internal/api/handlers.go
+/* ==========================
+   FILE: src/app/components/self-heal/self-heal.component.ts
+   ========================== */
+import { Component } from '@angular/core';
 
-package api
+@Component({
+  selector: 'app-self-heal',
+  template: `<p>Self-heal automation configuration will be here.</p>`
+})
+export class SelfHealComponent {}
 
-import (
-    "logic-monitor-api/internal/config"
-    "logic-monitor-api/internal/logic"
-    "logic-monitor-api/internal/model"
-    "logic-monitor-api/internal/svc"
-
-    "github.com/gin-gonic/gin"
-)
-
-func GetStatuses(c *gin.Context) {
-    cfg := config.Load()
-    sctx := svc.NewServiceContext(cfg)
-
-    statuses := []model.StatusResponse{
-        logic.CheckEndpoint("internal", sctx.Config.InternalURL),
-        logic.CheckEndpoint("external", sctx.Config.ExternalURL),
-    }
-    c.JSON(200, statuses)
+/* ==========================
+   FILE: src/styles.css
+   ========================== */
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
 }
 
+.spacer {
+  flex: 1 1 auto;
+}
 
-⸻
-
-8. go.mod
-
-module logic-monitor-api
-
-go 1.20
-
-require github.com/gin-gonic/gin v1.9.0
-
-
-⸻
-
-🚀 Usage
-	1.	Setup environment variables:
-
-set INTERNAL_URL=http://internal-service/health
-set EXTERNAL_URL=https://public-api/health
-
-
-	2.	Run:
-
-go mod tidy
-go run cmd/server/main.go
-
-
-	3.	Test:
-
-GET http://localhost:8080/api/v1/statuses
-
-Response:
-
-[
-  {"endpoint":"internal","status":"Green"},
-  {"endpoint":"external","status":"Yellow"}
-]
-
-
-
-⸻
-
-📚 Notes:
-	•	You can extend it with databases, email integration, or self-healing actions.
-	•	The modular structure (cfg, svc, logic, api) follows best practices for maintainability  ￼ ￼.
-	•	For more advanced features, integrate with a scheduler or job queue, and extend monitor.go to trigger self-heal APIs.
-
-⸻
-
-Let me know if you’d like me to add file upload endpoints, alerting integration, or database persistence next!
+mat-toolbar button {
+  color: white;
+}
