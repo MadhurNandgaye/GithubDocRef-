@@ -1,234 +1,284 @@
-/* ==========================
-   FILE: angular.json
-   ========================== */
-{
-  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1,
-  "newProjectRoot": "projects",
-  "projects": {
-    "logic-app-monitor": {
-      "projectType": "application",
-      "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
-      "prefix": "app",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/logic-app-monitor",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.css"],
-            "scripts": []
-          },
-          "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "logic-app-monitor:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "logic-app-monitor:build:production"
-            }
-          }
-        }
-      }
-    }
-  },
-  "defaultProject": "logic-app-monitor"
+=== ANGULAR FRONTEND PROJECT STRUCTURE ===
+
+logic-app-monitor-ui/
+├── angular.json
+├── package.json
+├── tsconfig.json
+├── src/
+│   ├── index.html
+│   ├── main.ts
+│   ├── styles.css
+│   ├── app/
+│   │   ├── app.module.ts
+│   │   ├── app-routing.module.ts
+│   │   ├── app.component.ts
+│   │   ├── app.component.html
+│   │   ├── components/
+│   │   │   ├── dashboard/
+│   │   │   │   ├── dashboard.component.ts
+│   │   │   │   ├── dashboard.component.html
+│   │   │   │   ├── dashboard.component.css
+│   │   │   ├── endpoint-status/
+│   │   │   │   ├── endpoint-status.component.ts
+│   │   │   │   ├── endpoint-status.component.html
+│   │   │   │   ├── endpoint-status.component.css
+│   │   │   ├── notifications/
+│   │   │   │   ├── notifications.component.ts
+│   │   │   │   ├── notifications.component.html
+│   │   │   │   ├── notifications.component.css
+│   │   │   ├── actions/
+│   │   │   │   ├── actions.component.ts
+│   │   │   │   ├── actions.component.html
+│   │   │   │   ├── actions.component.css
+│   │   ├── services/
+│   │   │   ├── monitor.service.ts
+│   │   ├── models/
+│   │   │   ├── endpoint.model.ts
+
+=== FILE CONTENTS ===
+
+// index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Logic App Monitor</title>
+  <base href="/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>
+
+// main.ts
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
+
+// styles.css
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+body {
+  margin: 0;
+  font-family: Roboto, sans-serif;
+  background-color: #f5f5f5;
 }
 
-/* ==========================
-   FILE: src/app/app.module.ts
-   ========================== */
+// app.component.ts
+import { Component } from '@angular/core';
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html'
+})
+export class AppComponent {}
+
+// app.component.html
+<mat-toolbar color="primary">
+  Logic App Monitor
+</mat-toolbar>
+<div style="padding: 16px">
+  <app-dashboard></app-dashboard>
+</div>
+
+// app-routing.module.ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+const routes: Routes = [];
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+// app.module.ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { AppRoutingModule } from './app-routing.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { StatusCardComponent } from './components/status-card/status-card.component';
-import { RouterModule, Routes } from '@angular/router';
-import { NotificationSettingsComponent } from './components/notification-settings/notification-settings.component';
-import { SelfHealComponent } from './components/self-heal/self-heal.component';
-
-const routes: Routes = [
-  { path: '', component: DashboardComponent },
-  { path: 'notifications', component: NotificationSettingsComponent },
-  { path: 'self-heal', component: SelfHealComponent }
-];
+import { EndpointStatusComponent } from './components/endpoint-status/endpoint-status.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ActionsComponent } from './components/actions/actions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    StatusCardComponent,
-    NotificationSettingsComponent,
-    SelfHealComponent
+    EndpointStatusComponent,
+    NotificationsComponent,
+    ActionsComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(routes),
+    HttpClientModule,
+    AppRoutingModule,
     MatToolbarModule,
     MatCardModule,
-    MatButtonModule,
     MatIconModule,
-    MatTableModule
+    MatButtonModule,
+    MatSnackBarModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
 
-/* ==========================
-   FILE: src/app/app.component.html
-   ========================== */
-<mat-toolbar color="primary">
-  Logic App Monitor
-  <span class="spacer"></span>
-  <button mat-button routerLink="/">Dashboard</button>
-  <button mat-button routerLink="/notifications">Notifications</button>
-  <button mat-button routerLink="/self-heal">Self-Heal</button>
-</mat-toolbar>
-<router-outlet></router-outlet>
+// models/endpoint.model.ts
+export interface Endpoint {
+  name: string;
+  status: 'Red' | 'Yellow' | 'Green';
+  responseTime: number;
+  lastChecked: Date;
+}
 
-/* ==========================
-   FILE: src/app/components/dashboard/dashboard.component.ts
-   ========================== */
+// services/monitor.service.ts
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Endpoint } from '../models/endpoint.model';
+
+@Injectable({ providedIn: 'root' })
+export class MonitorService {
+  constructor(private http: HttpClient) {}
+
+  getEndpointStatus(): Observable<Endpoint[]> {
+    return this.http.get<Endpoint[]>('/api/monitor/endpoints');
+  }
+
+  triggerAction(endpoint: string): Observable<any> {
+    return this.http.post('/api/monitor/actions', { endpoint });
+  }
+}
+
+// components/dashboard/dashboard.component.ts
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-  endpoints = [
-    { name: 'Internal API', status: 'Green' },
-    { name: 'External UI', status: 'Yellow' },
-    { name: 'Auth Service', status: 'Red' }
-  ];
+export class DashboardComponent {}
+
+// components/dashboard/dashboard.component.html
+<mat-card>
+  <mat-card-title>Endpoint Status</mat-card-title>
+  <app-endpoint-status></app-endpoint-status>
+</mat-card>
+<mat-card style="margin-top: 16px;">
+  <mat-card-title>Notifications</mat-card-title>
+  <app-notifications></app-notifications>
+</mat-card>
+<mat-card style="margin-top: 16px;">
+  <mat-card-title>Self-Heal Actions</mat-card-title>
+  <app-actions></app-actions>
+</mat-card>
+
+// components/dashboard/dashboard.component.css
+mat-card {
+  margin-bottom: 16px;
 }
 
-/* ==========================
-   FILE: src/app/components/dashboard/dashboard.component.html
-   ========================== */
-<div class="dashboard">
-  <app-status-card *ngFor="let ep of endpoints" [endpoint]="ep"></app-status-card>
-</div>
-
-/* ==========================
-   FILE: src/app/components/dashboard/dashboard.component.css
-   ========================== */
-.dashboard {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  flex-wrap: wrap;
-}
-
-/* ==========================
-   FILE: src/app/components/status-card/status-card.component.ts
-   ========================== */
-import { Component, Input } from '@angular/core';
+// components/endpoint-status/endpoint-status.component.ts
+import { Component, OnInit } from '@angular/core';
+import { MonitorService } from '../../services/monitor.service';
+import { Endpoint } from '../../models/endpoint.model';
 
 @Component({
-  selector: 'app-status-card',
-  templateUrl: './status-card.component.html',
-  styleUrls: ['./status-card.component.css']
+  selector: 'app-endpoint-status',
+  templateUrl: './endpoint-status.component.html',
+  styleUrls: ['./endpoint-status.component.css']
 })
-export class StatusCardComponent {
-  @Input() endpoint: any;
+export class EndpointStatusComponent implements OnInit {
+  endpoints: Endpoint[] = [];
+  constructor(private monitorService: MonitorService) {}
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'Green': return '#4caf50';
-      case 'Yellow': return '#ffeb3b';
-      case 'Red': return '#f44336';
-      default: return '#ccc';
-    }
+  ngOnInit() {
+    this.monitorService.getEndpointStatus().subscribe(data => this.endpoints = data);
   }
 }
 
-/* ==========================
-   FILE: src/app/components/status-card/status-card.component.html
-   ========================== */
-<mat-card [style.border-left]="'5px solid ' + getStatusColor(endpoint.status)">
-  <mat-card-title>{{ endpoint.name }}</mat-card-title>
-  <mat-card-content>
-    Status: <strong>{{ endpoint.status }}</strong>
-  </mat-card-content>
-</mat-card>
+// components/endpoint-status/endpoint-status.component.html
+<div *ngFor="let ep of endpoints">
+  <mat-card>
+    <mat-card-title>
+      {{ ep.name }} - <span [ngClass]="ep.status.toLowerCase()">{{ ep.status }}</span>
+    </mat-card-title>
+    <mat-card-content>
+      Response Time: {{ ep.responseTime }} ms<br/>
+      Last Checked: {{ ep.lastChecked | date:'short' }}
+    </mat-card-content>
+  </mat-card>
+</div>
 
-/* ==========================
-   FILE: src/app/components/status-card/status-card.component.css
-   ========================== */
-mat-card {
-  width: 200px;
+// components/endpoint-status/endpoint-status.component.css
+.red { color: red; }
+.yellow { color: orange; }
+.green { color: green; }
+
+// components/notifications/notifications.component.ts
+import { Component } from '@angular/core';
+@Component({
+  selector: 'app-notifications',
+  templateUrl: './notifications.component.html',
+  styleUrls: ['./notifications.component.css']
+})
+export class NotificationsComponent {
+  notifications = [
+    'API A degraded from external network',
+    'UI Service response time above threshold'
+  ];
 }
 
-/* ==========================
-   FILE: src/app/components/notification-settings/notification-settings.component.ts
-   ========================== */
+// components/notifications/notifications.component.html
+<ul>
+  <li *ngFor="let note of notifications">
+    {{ note }}
+  </li>
+</ul>
+
+// components/notifications/notifications.component.css
+ul {
+  padding-left: 20px;
+}
+li {
+  margin-bottom: 8px;
+}
+
+// components/actions/actions.component.ts
 import { Component } from '@angular/core';
+import { MonitorService } from '../../services/monitor.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-notification-settings',
-  template: `<p>Notification settings will be here.</p>`
+  selector: 'app-actions',
+  templateUrl: './actions.component.html',
+  styleUrls: ['./actions.component.css']
 })
-export class NotificationSettingsComponent {}
+export class ActionsComponent {
+  constructor(private monitorService: MonitorService, private snackBar: MatSnackBar) {}
 
-/* ==========================
-   FILE: src/app/components/self-heal/self-heal.component.ts
-   ========================== */
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-self-heal',
-  template: `<p>Self-heal automation configuration will be here.</p>`
-})
-export class SelfHealComponent {}
-
-/* ==========================
-   FILE: src/styles.css
-   ========================== */
-body {
-  margin: 0;
-  font-family: Roboto, sans-serif;
+  triggerSelfHeal() {
+    this.monitorService.triggerAction('API A').subscribe(() => {
+      this.snackBar.open('Self-heal triggered for API A', 'Close', { duration: 3000 });
+    });
+  }
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
+// components/actions/actions.component.html
+<button mat-raised-button color="warn" (click)="triggerSelfHeal()">
+  Trigger Self-Heal for API A
+</button>
 
-mat-toolbar button {
-  color: white;
+// components/actions/actions.component.css
+button {
+  margin-top: 10px;
 }
